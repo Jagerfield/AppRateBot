@@ -5,28 +5,26 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.SystemClock;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-
 import ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum;
 import ratemyapp.jagerfield.appratebotlib.Utils.C;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
 
-public class ExecuteTimeOnly
+public class TimeOnlyBuilderModel
 {
     private Context context;
 
-    private ExecuteTimeOnly(Context context)
+    private TimeOnlyBuilderModel(Context context)
     {
         this.context = context;
     }
 
-    public static ExecuteTimeOnly getNewInstance(Context context)
+    public static TimeOnlyBuilderModel getNewInstance(Context context)
     {
-        return new ExecuteTimeOnly(context);
+        return new TimeOnlyBuilderModel(context);
     }
 
     public RatingStatusEnum getRatingStatus()  throws Exception
@@ -108,7 +106,7 @@ public class ExecuteTimeOnly
         return period;
     }
 
-    public boolean isItOkToAskForFirstTime(Activity activity, TimeUnit timeUnit, int timeAmount, TimeOnly.ICallback client)
+    public boolean isItOkToAskForFirstTime(Activity activity, TimeUnit timeUnit, int timeAmount, TimeOnlyBuilder.ICallback client)
     {
         boolean result = false;
         long currentDate = 0l;
@@ -155,7 +153,7 @@ public class ExecuteTimeOnly
        return result;
     }
 
-    public boolean isItTimeToAskAgain(Activity activity, TimeUnit timeUnit, int timeAmount, TimeOnly.ICallback client)
+    public boolean isItTimeToAskAgain(Activity activity, TimeUnit timeUnit, int timeAmount, TimeOnlyBuilder.ICallback client)
     {
         boolean result = false;
         long currentDate = 0l;

@@ -13,10 +13,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RatingDialog.TimeOnlyBuilder(this)
-                .setTitle("Title")
-                .setDescription("Description")
-                .setIcon(R.drawable.ic_launcher_background)
+        RatingDialog.timeOnlyBuilder(this)
+                .setTitle("Thanks for using the app")
+                .setDescription("If it has been useful to you\nwould you kindly rate it on GooglePlay")
+                .setIcon(R.mipmap.ic_launcher)
                 .setTimeUnitAndAmount(TimeUnit.SECONDS, 60)
                 .build();
     }

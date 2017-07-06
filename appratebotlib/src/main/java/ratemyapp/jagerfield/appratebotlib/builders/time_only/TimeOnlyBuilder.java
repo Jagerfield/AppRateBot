@@ -2,15 +2,13 @@ package ratemyapp.jagerfield.appratebotlib.builders.time_only;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
+
 import java.util.concurrent.TimeUnit;
 
 import ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum;
 import ratemyapp.jagerfield.appratebotlib.dialog.RatingDialog;
 
-import static ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum.NOT_ASKED;
-
-public class TimeOnly implements ITimeOnly
+public class TimeOnlyBuilder implements ITimeOnly
 {
     private static Activity activity;
     private static Context context;
@@ -20,16 +18,16 @@ public class TimeOnly implements ITimeOnly
     private TimeUnit timeUnit;
     private int timePeriod = -1000;
 
-    private static TimeOnly instance;
+    private static TimeOnlyBuilder instance;
 
-    public TimeOnly()
+    public TimeOnlyBuilder()
     { }
 
-    public static TimeOnly getNewInstance(Activity activity)
+    public static TimeOnlyBuilder getNewInstance(Activity activity)
     {
-        TimeOnly.activity = activity;
+        TimeOnlyBuilder.activity = activity;
         context = activity.getApplicationContext();
-        return new TimeOnly();
+        return new TimeOnlyBuilder();
     }
 
     public String getTitle() {
@@ -74,16 +72,15 @@ public class TimeOnly implements ITimeOnly
     public void build()
     {
         final RatingDialog[] obj = new RatingDialog[1];
+        final TimeOnlyBuilder builder = this;
 
         try
         {
             checkUp();
 
-            ExecuteTimeOnly executor = ExecuteTimeOnly.getNewInstance(context);
+            final TimeOnlyBuilderModel executor = TimeOnlyBuilderModel.getNewInstance(context);
             RatingStatusEnum ratingStatus;
             ratingStatus = executor.getRatingStatus();
-
-
 
             switch (ratingStatus)
             {
@@ -92,7 +89,7 @@ public class TimeOnly implements ITimeOnly
                         @Override
                         public void showRatingDialog()
                         {
-                            RatingDialog.getNewInstance(activity).show();
+                            RatingDialog.getNewInstance(activity, builder).show();
                         }
                     });
                     break;
@@ -103,7 +100,7 @@ public class TimeOnly implements ITimeOnly
                         @Override
                         public void showRatingDialog()
                         {
-                            RatingDialog.getNewInstance(context);
+                            RatingDialog.getNewInstance(activity, builder).show();
                         }
                     });
                     break;
