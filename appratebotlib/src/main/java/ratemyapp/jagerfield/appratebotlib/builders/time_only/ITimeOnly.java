@@ -1,4 +1,4 @@
-package ratemyapp.jagerfield.appratebotlib.builders;
+package ratemyapp.jagerfield.appratebotlib.builders.time_only;
 
 import java.util.concurrent.TimeUnit;
 

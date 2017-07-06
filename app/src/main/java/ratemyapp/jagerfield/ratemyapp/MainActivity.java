@@ -8,7 +8,7 @@ import android.widget.Toast;
 import java.util.concurrent.TimeUnit;
 
 import ratemyapp.jagerfield.appratebotlib.builders.Ratings;
-import ratemyapp.jagerfield.appratebotlib.builders.TimeOnly;
+import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnly;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package ratemyapp.jagerfield.appratebotlib;
+package ratemyapp.jagerfield.appratebotlib.builders.time_only;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,22 +10,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+
+import ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum;
 import ratemyapp.jagerfield.appratebotlib.Utils.C;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
-import ratemyapp.jagerfield.appratebotlib.builders.TimeOnly;
 
-public class ExecuteRatingsContract
+public class ExecuteTimeOnly
 {
     private Context context;
 
-    private ExecuteRatingsContract(Context context)
+    private ExecuteTimeOnly(Context context)
     {
         this.context = context;
     }
 
-    public static ExecuteRatingsContract getNewInstance(Context context)
+    public static ExecuteTimeOnly getNewInstance(Context context)
     {
-        return new ExecuteRatingsContract(context);
+        return new ExecuteTimeOnly(context);
     }
 
     public RatingStatusEnum getRatingStatus()  throws Exception
@@ -41,7 +42,7 @@ public class ExecuteRatingsContract
 
         if (result == -9 )
         {
-            result = RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NOT_ASKED_YET);
+            result = RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NOT_ASKED);
             PreferenceUtil.setInt(context, C.IRatings.KEY_RATINGS_STATE, result);
         }
 
@@ -78,7 +79,7 @@ public class ExecuteRatingsContract
 
         if (askMeLaterDate == 0 )
         {
-            PreferenceUtil.setInt(context, C.IRatings.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.DONT_ASK_AGAIN));
+            PreferenceUtil.setInt(context, C.IRatings.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
             throw new IllegalStateException("Can't get askMeLaterDate");
         }
 

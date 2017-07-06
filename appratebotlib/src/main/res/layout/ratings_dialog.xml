@@ -76,7 +76,7 @@
         android:weightSum="3">
 
         <TextView
-            android:id="@+id/dialog_rating_button_dont_ask_again"
+            android:id="@+id/noRatingBt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -88,7 +88,7 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/dialog_rating_button_ask_me_later"
+            android:id="@+id/laterRatingBt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -100,7 +100,7 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/dialog_rating_button_ok"
+            android:id="@+id/okRatingBt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

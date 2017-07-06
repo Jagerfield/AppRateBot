@@ -1,12 +1,13 @@
-package ratemyapp.jagerfield.appratebotlib.builders;
+package ratemyapp.jagerfield.appratebotlib.builders.time_only;
 
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import java.util.concurrent.TimeUnit;
-import ratemyapp.jagerfield.appratebotlib.ExecuteRatingsContract;
-import ratemyapp.jagerfield.appratebotlib.RatingStatusEnum;
-import static ratemyapp.jagerfield.appratebotlib.RatingStatusEnum.NOT_ASKED_YET;
+
+import ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum;
+
+import static ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum.NOT_ASKED;
 
 public class TimeOnly implements ITimeOnly
 {
@@ -79,18 +80,18 @@ public class TimeOnly implements ITimeOnly
 
         try
         {
-            ExecuteRatingsContract executor = ExecuteRatingsContract.getNewInstance(context);
-            RatingStatusEnum ratingStatus = NOT_ASKED_YET;
+            ExecuteTimeOnly executor = ExecuteTimeOnly.getNewInstance(context);
+            RatingStatusEnum ratingStatus = NOT_ASKED;
             ratingStatus = executor.getRatingStatus();
 
             switch (ratingStatus)
             {
-                case NOT_ASKED_YET:
+                case NOT_ASKED:
                     executor.isItOkToAskForFirstTime(activity, timeUnit, timePeriod, client);
                     break;
-                case DONT_ASK_AGAIN:
+                case NEVER:
                     break;
-                case REMIND_ME_LATER:
+                case LATER:
                     executor.isItTimeToAskAgain(activity, timeUnit, timePeriod, client);
                     break;
                 default:
