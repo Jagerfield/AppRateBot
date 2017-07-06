@@ -3,7 +3,6 @@ package ratemyapp.jagerfield.appratebotlib.dialog;
 import android.support.v7.app.AppCompatDialog;
 import android.view.View;
 import android.widget.TextView;
-
 import ratemyapp.jagerfield.appratebotlib.R;
 
 public class RatingDialogModel
@@ -13,13 +12,13 @@ public class RatingDialogModel
     private RatingDialogModel(AppCompatDialog appCompatDialog)
     {
         this.appCompatDialog = appCompatDialog;
+        initialize();
     }
 
     public static RatingDialogModel getNewInstace(AppCompatDialog appCompatDialog)
     {
         return new RatingDialogModel(appCompatDialog);
     }
-
 
     private void initialize()
     {

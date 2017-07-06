@@ -143,7 +143,7 @@ public class ExecuteTimeOnly
                  *
                  *
                  */
-                client.showRatingMessage();
+                client.showRatingDialog();
             }
         }
         catch (Exception e)
@@ -192,7 +192,7 @@ public class ExecuteTimeOnly
                  *
                  *
                  */
-                client.showRatingMessage();
+                client.showRatingDialog();
             }
         }
         catch (Exception e)

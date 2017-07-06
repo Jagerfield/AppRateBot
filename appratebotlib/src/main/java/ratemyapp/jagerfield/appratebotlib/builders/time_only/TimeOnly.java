@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.concurrent.TimeUnit;
 
 import ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum;
+import ratemyapp.jagerfield.appratebotlib.dialog.RatingDialog;
 
 import static ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum.NOT_ASKED;
 
@@ -15,9 +16,9 @@ public class TimeOnly implements ITimeOnly
     private static Context context;
     private String title;
     private String description;
-    private int icon;
+    private int icon = -1000;
     private TimeUnit timeUnit;
-    private int timePeriod;
+    private int timePeriod = -1000;
 
     private static TimeOnly instance;
 
@@ -70,29 +71,41 @@ public class TimeOnly implements ITimeOnly
     }
 
     @Override
-    public void execute(ICallback client)
+    public void build()
     {
-        if (activity == null)
-        {
-            Log.e("TAG", "Activity is null");
-            return;
-        }
+        final RatingDialog[] obj = new RatingDialog[1];
 
         try
         {
+            checkUp();
+
             ExecuteTimeOnly executor = ExecuteTimeOnly.getNewInstance(context);
-            RatingStatusEnum ratingStatus = NOT_ASKED;
+            RatingStatusEnum ratingStatus;
             ratingStatus = executor.getRatingStatus();
+
+
 
             switch (ratingStatus)
             {
                 case NOT_ASKED:
-                    executor.isItOkToAskForFirstTime(activity, timeUnit, timePeriod, client);
+                    executor.isItOkToAskForFirstTime(activity, timeUnit, timePeriod, new ICallback() {
+                        @Override
+                        public void showRatingDialog()
+                        {
+                            RatingDialog.getNewInstance(activity).show();
+                        }
+                    });
                     break;
                 case NEVER:
                     break;
                 case LATER:
-                    executor.isItTimeToAskAgain(activity, timeUnit, timePeriod, client);
+                    executor.isItTimeToAskAgain(activity, timeUnit, timePeriod, new ICallback() {
+                        @Override
+                        public void showRatingDialog()
+                        {
+                            RatingDialog.getNewInstance(context);
+                        }
+                    });
                     break;
                 default:
                     break;
@@ -101,11 +114,46 @@ public class TimeOnly implements ITimeOnly
         catch (Exception e) {
             e.printStackTrace();
         }
+
+//        return obj[0];
+    }
+
+    private void checkUp() throws Exception
+    {
+        if (activity == null)
+        {
+            throw new IllegalStateException("Activity is null");
+        }
+
+        if (title == null || title.isEmpty())
+        {
+            throw new IllegalStateException("title is null");
+        }
+
+        if (description == null || description.isEmpty())
+        {
+            throw new IllegalStateException("description is null");
+        }
+
+        if (timeUnit == null)
+        {
+            throw new IllegalStateException("timeUnit is null");
+        }
+
+        if (icon <= 0)
+        {
+            throw new IllegalStateException("icon is incorrect");
+        }
+
+        if (timePeriod <= 0)
+        {
+            throw new IllegalStateException("icon is incorrect");
+        }
     }
 
     public interface ICallback
     {
-        void showRatingMessage();
+        void showRatingDialog();
     }
 
 }
