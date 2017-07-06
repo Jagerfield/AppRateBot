@@ -8,7 +8,7 @@ import ratemyapp.jagerfield.appratebotlib.ExecuteRatingsContract;
 import ratemyapp.jagerfield.appratebotlib.RatingStatusEnum;
 import static ratemyapp.jagerfield.appratebotlib.RatingStatusEnum.NOT_ASKED_YET;
 
-public class RatingsTimeOnlyBuilder implements IRatingsTimeOnlyBuilder
+public class TimeOnly implements ITimeOnly
 {
     private static Activity activity;
     private static Context context;
@@ -18,16 +18,16 @@ public class RatingsTimeOnlyBuilder implements IRatingsTimeOnlyBuilder
     private TimeUnit timeUnit;
     private int timePeriod;
 
-    private static RatingsTimeOnlyBuilder instance;
+    private static TimeOnly instance;
 
-    public RatingsTimeOnlyBuilder()
+    public TimeOnly()
     { }
 
-    public static RatingsTimeOnlyBuilder getNewInstance(Activity activity)
+    public static TimeOnly getNewInstance(Activity activity)
     {
-        RatingsTimeOnlyBuilder.activity = activity;
+        TimeOnly.activity = activity;
         context = activity.getApplicationContext();
-        return new RatingsTimeOnlyBuilder();
+        return new TimeOnly();
     }
 
     public String getTitle() {
@@ -35,7 +35,7 @@ public class RatingsTimeOnlyBuilder implements IRatingsTimeOnlyBuilder
     }
 
     @Override
-    public IRatingsTimeOnlyBuilder setTitle(String title) {
+    public ITimeOnly setTitle(String title) {
         this.title = title;
         return this;
     }
@@ -45,7 +45,7 @@ public class RatingsTimeOnlyBuilder implements IRatingsTimeOnlyBuilder
     }
 
     @Override
-    public IRatingsTimeOnlyBuilder setDescription(String description) {
+    public ITimeOnly setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -55,17 +55,13 @@ public class RatingsTimeOnlyBuilder implements IRatingsTimeOnlyBuilder
     }
 
     @Override
-    public IRatingsTimeOnlyBuilder setIcon(int icon) {
+    public ITimeOnly setIcon(int icon) {
         this.icon = icon;
         return this;
     }
 
-    public TimeUnit getTimeUnit() {
-        return timeUnit;
-    }
-
     @Override
-    public IRatingsTimeOnlyBuilder setTimeUnitAndAmount(TimeUnit timeUnit, int timeAmount)
+    public ITimeOnly setTimeUnitAndAmount(TimeUnit timeUnit, int timeAmount)
     {
         this.timePeriod = timeAmount;
         this.timeUnit = timeUnit;

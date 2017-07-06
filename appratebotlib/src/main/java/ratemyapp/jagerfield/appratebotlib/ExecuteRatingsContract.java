@@ -12,7 +12,7 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import ratemyapp.jagerfield.appratebotlib.Utils.C;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
-import ratemyapp.jagerfield.appratebotlib.builders.RatingsTimeOnlyBuilder;
+import ratemyapp.jagerfield.appratebotlib.builders.TimeOnly;
 
 public class ExecuteRatingsContract
 {
@@ -74,9 +74,9 @@ public class ExecuteRatingsContract
 
     public long getAskMeLaterDate() throws Exception
     {
-        long askMeLaterDate = PreferenceUtil.getLong(context, C.IRatings.KEY_USAGE_COUNT, -9l);
+        long askMeLaterDate = PreferenceUtil.getLong(context, C.IRatings.KEY_ASK_AGAIN_DATE, 0l);
 
-        if (askMeLaterDate == -9 )
+        if (askMeLaterDate == 0 )
         {
             PreferenceUtil.setInt(context, C.IRatings.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.DONT_ASK_AGAIN));
             throw new IllegalStateException("Can't get askMeLaterDate");
@@ -107,7 +107,7 @@ public class ExecuteRatingsContract
         return period;
     }
 
-    public boolean isItOkToAskForFirstTime(Activity activity, TimeUnit timeUnit, int timeAmount, RatingsTimeOnlyBuilder.ICallback client)
+    public boolean isItOkToAskForFirstTime(Activity activity, TimeUnit timeUnit, int timeAmount, TimeOnly.ICallback client)
     {
         boolean result = false;
         long currentDate = 0l;
@@ -154,7 +154,7 @@ public class ExecuteRatingsContract
        return result;
     }
 
-    public boolean isItTimeToAskAgain(Activity activity, TimeUnit timeUnit, int timeAmount, RatingsTimeOnlyBuilder.ICallback client)
+    public boolean isItTimeToAskAgain(Activity activity, TimeUnit timeUnit, int timeAmount, TimeOnly.ICallback client)
     {
         boolean result = false;
         long currentDate = 0l;
@@ -166,6 +166,18 @@ public class ExecuteRatingsContract
         {
             currentDate = SystemClock.uptimeMillis();
             askMeAgainDate = getAskMeLaterDate();
+
+
+            if (client == null)
+            {
+                throw new IllegalStateException("client is null");
+            }
+
+            if (askMeAgainDate==0)
+            {
+                throw new IllegalStateException("askMeAgainDate is 0");
+            }
+
             timeSinceInstallation = askMeAgainDate + periodCriteria;
 
             if (currentDate > timeSinceInstallation)

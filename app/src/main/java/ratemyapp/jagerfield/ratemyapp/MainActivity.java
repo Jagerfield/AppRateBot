@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
-import ratemyapp.jagerfield.appratebotlib.builders.IRatingsTimeOnlyBuilder;
-import ratemyapp.jagerfield.appratebotlib.builders.RatingsTimeOnlyBuilder;
+
+import ratemyapp.jagerfield.appratebotlib.builders.Ratings;
+import ratemyapp.jagerfield.appratebotlib.builders.TimeOnly;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,13 +18,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        IRatingsTimeOnlyBuilder builder = RatingsTimeOnlyBuilder.getNewInstance(this);
-
-        builder.setTitle("Title")
+        Ratings.TimeOnlyBuilder(this)
+                .setTitle("Title")
                 .setDescription("Description")
                 .setIcon(1)
                 .setTimeUnitAndAmount(TimeUnit.SECONDS, 60)
-                .execute(new RatingsTimeOnlyBuilder.ICallback()
+                .execute(new TimeOnly.ICallback()
                 {
                     @Override
                     public void showRatingMessage()

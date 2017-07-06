@@ -30,5 +30,6 @@ public class C
     {
         String KEY_RATINGS_STATE = "KEY_RATINGS_STATE";
         String KEY_USAGE_COUNT = "KEY_USAGE_COUNT";
+        String KEY_ASK_AGAIN_DATE = "KEY_ASK_AGAIN_DATE";
     }
 }
