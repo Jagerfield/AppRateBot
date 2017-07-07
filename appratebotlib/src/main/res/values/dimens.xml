@@ -2,5 +2,5 @@
 <resources>
     <dimen name="corner_radius">12dp</dimen>
     <dimen name="rate_button_height">40dp</dimen>
-    <dimen name="tesxt_size_button_rating">16sp</dimen>
+    <dimen name="text_size_button_rating">16sp</dimen>
 </resources>

@@ -9,5 +9,11 @@
     <color name="accent">#ec2045</color>
     <color name="greymedium">#FFa0a0a0</color>
     <color name="duskYellow">#FFF4D03F</color>
+    <color name="green">#FF88D8B0</color>
+    <color name="menublue">#FF66b2ff</color>
+    <color name="blue_light">#FFAED6F1  </color>
+    <color name="green_dark">#ff7ac29e</color>
+    <color name="grey_greenish_background">#FF7F7F7F</color>
+    <color name="greytext">#FF666666</color>
 
 </resources>
