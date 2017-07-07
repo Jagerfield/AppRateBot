@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="corner_radius">20dp</dimen>
-    <dimen name="rate_button_height">50dp</dimen>
+    <dimen name="corner_radius">12dp</dimen>
+    <dimen name="rate_button_height">40dp</dimen>
     <dimen name="tesxt_size_button_rating">16sp</dimen>
 </resources>

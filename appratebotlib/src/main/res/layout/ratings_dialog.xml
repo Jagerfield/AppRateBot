@@ -3,70 +3,62 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:background="@drawable/rounded_rectangle"
-    android:layout_margin="0dp">
+    android:layout_gravity="center"
+    android:background="@drawable/rounded_rectangle">
 
-    <ImageView
-        android:id="@+id/iconRatingDlg"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
-
-    <TextView
-        android:id="@+id/titleRatingDlg"
+    <LinearLayout
+        android:id="@+id/titleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/iconRatingDlg"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="Thanks for using the app"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/iconRatingDlg"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/titleRatingDlg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Thanks for using the app"
+            android:textColor="@color/black"
+            android:layout_marginLeft="16dp"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/descriptionRatingDlg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/titleRatingDlg"
+        android:layout_below="@id/titleLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:text="If you are finding it useful, would you kindly rate it on GooglePlay"
+        android:text="If you found the app useful kindly rate it on GooglePlay"
         android:textColor="@color/black"
         android:textSize="18sp" />
-
-    <EditText
-        android:id="@+id/dialog_rating_feedback"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_below="@id/descriptionRatingDlg"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/edittext_background"
-        android:gravity="top|left"
-        android:inputType="textMultiLine|textCapSentences"
-        android:lines="8"
-        android:maxLines="10"
-        android:minLines="6"
-        android:padding="10dp"
-        android:scrollbars="vertical"
-        android:textColorHint="@color/grey_400"
-        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/dialog_rating_buttons"
         android:layout_width="match_parent"
         android:layout_height="@dimen/rate_button_height"
-        android:layout_below="@id/descriptionRatingDlg"
-        android:layout_marginTop="24dp"
         android:background="?attr/selectableItemBackground"
         android:orientation="horizontal"
+        android:layout_below="@id/descriptionRatingDlg"
         android:weightSum="3">
 
         <TextView
@@ -74,7 +66,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/button_dont_ask_again"
             android:clickable="true"
             android:gravity="center"
             android:text="No"
@@ -86,11 +77,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/button_ask_me_later"
             android:clickable="true"
             android:gravity="center"
             android:text="Later"
-            android:textColor="@color/grey_boarder"
+            android:textColor="@color/grey_200"
             android:textSize="@dimen/tesxt_size_button_rating" />
 
         <TextView
@@ -98,7 +88,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/button_ok"
             android:clickable="true"
             android:gravity="center"
             android:text="Sure"

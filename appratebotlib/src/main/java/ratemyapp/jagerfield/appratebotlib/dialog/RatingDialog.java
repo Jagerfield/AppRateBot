@@ -43,18 +43,6 @@ public class RatingDialog extends AppCompatDialog
 
         RatingDialogModel.getNewInstace(this, executor);
     }
-//
-//    @Override
-//    public void show()
-//    {
-//        super.show();
-//    }
-//
-//    @Override
-//    public void dismiss()
-//    {
-//        super.dismiss();
-//    }
 }
 
 //ContextCompat.getColor(context, builder.titleTextColor)
