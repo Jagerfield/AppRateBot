@@ -205,16 +205,12 @@ public class TimeOnlyBuilderModel
     private String getDate(long time)
     {
         Date date = new Date(time);
-//        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy "); // the format of your date
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
+        sdf.setTimeZone(TimeZone.getDefault());
+//        sdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
 
         return sdf.format(date);
     }
-
-
-
-
 
 }
 
