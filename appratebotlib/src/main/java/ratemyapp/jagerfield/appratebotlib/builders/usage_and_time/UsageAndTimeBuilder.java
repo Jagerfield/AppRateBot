@@ -2,33 +2,41 @@ package ratemyapp.jagerfield.appratebotlib.builders.usage_and_time;
 
 import android.app.Activity;
 import android.content.Context;
+
 import java.util.concurrent.TimeUnit;
+
 import ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum;
 import ratemyapp.jagerfield.appratebotlib.builders.IBuilderFunctions;
 import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnlyBuilder;
-import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnlyBuilderLogicModel;
 import ratemyapp.jagerfield.appratebotlib.dialog.RatingDialog;
 
 public class UsageAndTimeBuilder implements IBuilderFunctions
 {
-    private static Activity activity;
-    private static Context context;
+    private final int usageMaxCount;
+    private final Context context;
+    private final Activity activity;
     private String title;
     private String description;
     private int icon = -1000;
     private TimeUnit timeUnit;
     private int timePeriod = -1000;
+    private UsageAndTimeLogicModel builderModel;
 
     private static UsageAndTimeBuilder instance;
 
-    public UsageAndTimeBuilder()
-    { }
-
-    public static UsageAndTimeBuilder getNewInstance(Activity activity)
+    public UsageAndTimeBuilder(Activity activity, int usageMaxCount)
     {
-        activity = activity;
-        context = activity.getApplicationContext();
-        return new UsageAndTimeBuilder();
+        this.usageMaxCount = usageMaxCount;
+        this.activity = activity;
+        this.context = activity.getApplicationContext();
+
+        builderModel = UsageAndTimeLogicModel.getNewInstance(context);
+        builderModel.updateUsageCount();
+    }
+
+    public static UsageAndTimeBuilder getNewInstance(Activity activity, int usageCount)
+    {
+        return new UsageAndTimeBuilder(activity, usageCount);
     }
 
     public String getTitle() {
@@ -77,16 +85,20 @@ public class UsageAndTimeBuilder implements IBuilderFunctions
 
         try
         {
-            checkUp();
+            int usageCount = builderModel.getAppUsageCount();
 
-            final TimeOnlyBuilderLogicModel executor = TimeOnlyBuilderLogicModel.getNewInstance(context);
+            if (usageCount <= usageMaxCount)
+            {
+                throw new IllegalStateException("Usage not enough is null");
+            }
+            checkUp();
             RatingStatusEnum ratingStatus;
-            ratingStatus = executor.getRatingStatus();
+            ratingStatus = builderModel.getRatingStatus();
 
             switch (ratingStatus)
             {
                 case NOT_ASKED:
-                    executor.isItOkToAskForFirstTime(activity, timeUnit, timePeriod, new TimeOnlyBuilder.ICallback() {
+                    builderModel.isItOkToAskForFirstTime(activity, timeUnit, timePeriod, new TimeOnlyBuilder.ICallback() {
                         @Override
                         public void showRatingDialog()
                         {
@@ -97,7 +109,7 @@ public class UsageAndTimeBuilder implements IBuilderFunctions
                 case NEVER:
                     break;
                 case LATER:
-                    executor.isItTimeToAskAgain(activity, timeUnit, timePeriod, new TimeOnlyBuilder.ICallback() {
+                    builderModel.isItTimeToAskAgain(activity, timeUnit, timePeriod, new TimeOnlyBuilder.ICallback() {
                         @Override
                         public void showRatingDialog()
                         {

@@ -114,7 +114,7 @@ public class TimeOnlyBuilder implements IBuilderFunctions
         }
     }
 
-    private void checkUp() throws Exception
+    public void checkUp() throws Exception
     {
         if (activity == null)
         {

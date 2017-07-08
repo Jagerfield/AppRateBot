@@ -46,9 +46,9 @@ public class RatingDialog extends AppCompatDialog
         return TimeOnlyBuilder.getNewInstance(activity);
     }
 
-    public static UsageAndTimeBuilder usageAndTimeBuilder(Activity activity)
+    public static UsageAndTimeBuilder usageAndTimeBuilder(Activity activity, int usageMaxCount)
     {
-        return UsageAndTimeBuilder.getNewInstance(activity);
+        return UsageAndTimeBuilder.getNewInstance(activity, usageMaxCount);
     }
 
     @Override

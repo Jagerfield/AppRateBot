@@ -1,4 +1,4 @@
-package ratemyapp.jagerfield.appratebotlib.builders.time_only;
+package ratemyapp.jagerfield.appratebotlib.builders.usage_and_time;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,25 +6,27 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.SystemClock;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-import ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum;
 import ratemyapp.jagerfield.appratebotlib.Utils.CLib;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
+import ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum;
+import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnlyBuilder;
 
-public class TimeOnlyBuilderLogicModel
+public class UsageAndTimeLogicModel 
 {
     private Context context;
 
-    private TimeOnlyBuilderLogicModel(Context context)
+    private UsageAndTimeLogicModel(Context context)
     {
         this.context = context;
     }
 
-    public static TimeOnlyBuilderLogicModel getNewInstance(Context context)
+    public static UsageAndTimeLogicModel getNewInstance(Context context)
     {
-        return new TimeOnlyBuilderLogicModel(context);
+        return new UsageAndTimeLogicModel(context);
     }
 
     public RatingStatusEnum getRatingStatus()  throws Exception
@@ -58,15 +60,9 @@ public class TimeOnlyBuilderLogicModel
         return installTimeInMilliseconds;
     }
 
-    public long getAppUsageCount() throws Exception
+    public int getAppUsageCount() throws Exception
     {
-        long usageCount = PreferenceUtil.getLong(context, CLib.IKEYS.KEY_USAGE_COUNT, -9l);
-
-        if (usageCount == -9 )
-        {
-            usageCount = 1l;
-            PreferenceUtil.setLong(context, CLib.IKEYS.KEY_USAGE_COUNT, usageCount);
-        }
+        int usageCount = PreferenceUtil.getInt(context, CLib.IKEYS.KEY_USAGE_COUNT, -9);
 
         return usageCount;
     }
@@ -155,7 +151,7 @@ public class TimeOnlyBuilderLogicModel
             result = false;
         }
 
-       return result;
+        return result;
     }
 
     public boolean isItTimeToAskAgain(Activity activity, TimeUnit timeUnit, int timeAmount, TimeOnlyBuilder.ICallback client)
@@ -195,7 +191,7 @@ public class TimeOnlyBuilderLogicModel
                  *
                  *
                  */
-                client.showRatingDialog();
+//                client.showRatingDialog();
             }
         }
         catch (Exception e)
@@ -217,14 +213,47 @@ public class TimeOnlyBuilderLogicModel
         return sdf.format(date);
     }
 
+    public void updateUsageCount()
+    {
+        int count = PreferenceUtil.getInt(context, CLib.IKEYS.KEY_USAGE_COUNT, -9);
+        long lastUsageDate = PreferenceUtil.getLong(context, CLib.IKEYS.KEY_LAST_USAGE_DATE, -9l);
+
+        Calendar lastDate = Calendar.getInstance();
+
+        lastDate.setWeekDate(2017, 21, Calendar.FRIDAY);//requires SDK24
+
+//        lastDate.setTimeInMillis(lastUsageDate);
+
+        int lastDayOfWeek = lastDate.get(Calendar.DAY_OF_WEEK);
+        int lastYear = lastDate.get(Calendar.YEAR);
+        int lastMonth = lastDate.get(Calendar.MONTH);
+
+        Calendar currentDate = Calendar.getInstance();
+        int currentDayOfWeek = currentDate.get(Calendar.DAY_OF_WEEK);
+        int currentYear = currentDate.get(Calendar.YEAR);
+        int currentMonth = currentDate.get(Calendar.MONTH);
+
+        //Set usage count and date for the first time
+        if (count==-9)
+        {
+            PreferenceUtil.setInt(context, CLib.IKEYS.KEY_USAGE_COUNT, 1);
+            PreferenceUtil.setLong(context, CLib.IKEYS.KEY_LAST_USAGE_DATE, currentDate.getTimeInMillis());
+            return;
+        }
+
+//        Calendar lastDate = Calendar.getInstance();
+//        lastDate.setWeekDate(2017, 27, Calendar.FRIDAY);//requires SDK24
+
+        if (currentDayOfWeek>lastDayOfWeek || currentYear>lastYear || currentMonth>lastMonth)
+        {
+            PreferenceUtil.setInt(context, CLib.IKEYS.KEY_USAGE_COUNT, count + 1);
+            PreferenceUtil.setLong(context, CLib.IKEYS.KEY_LAST_USAGE_DATE, currentDate.getTimeInMillis());
+        }
+        else
+        {
+
+        }
+
+        String days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    }
 }
-
-
-
-
-
-
-
-
-
-

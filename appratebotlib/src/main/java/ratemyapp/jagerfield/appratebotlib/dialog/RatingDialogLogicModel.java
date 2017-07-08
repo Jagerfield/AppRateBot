@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ratemyapp.jagerfield.appratebotlib.R;
-import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnlyBuilder;
 
 public class RatingDialogLogicModel
 {

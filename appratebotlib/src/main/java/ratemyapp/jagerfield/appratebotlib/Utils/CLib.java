@@ -8,7 +8,7 @@ import android.view.View;
 
 import java.util.List;
 
-public class C
+public class CLib
 {
     public static boolean sysIsBroken(Activity activity)
     {
@@ -26,11 +26,11 @@ public class C
         return result;
     }
 
-    public interface IRatings
+    public interface IKEYS
     {
         String KEY_RATINGS_STATE = "KEY_RATINGS_STATE";
-        String KEY_USAGE_COUNT = "KEY_USAGE_COUNT";
         String KEY_ASK_AGAIN_DATE = "KEY_ASK_AGAIN_DATE";
-        String KEY_LAST_USAGE = "KEY_LAST_USAGE";
+        String KEY_USAGE_COUNT = "KEY_USAGE_COUNT";
+        String KEY_LAST_USAGE_DATE = "KEY_LAST_USAGE_DATE";
     }
 }
