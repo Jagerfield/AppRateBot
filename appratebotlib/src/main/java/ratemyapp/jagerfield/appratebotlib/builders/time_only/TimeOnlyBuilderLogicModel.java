@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.SystemClock;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -13,18 +14,18 @@ import ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum;
 import ratemyapp.jagerfield.appratebotlib.Utils.C;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
 
-public class TimeOnlyBuilderModel
+public class TimeOnlyBuilderLogicModel
 {
     private Context context;
 
-    private TimeOnlyBuilderModel(Context context)
+    private TimeOnlyBuilderLogicModel(Context context)
     {
         this.context = context;
     }
 
-    public static TimeOnlyBuilderModel getNewInstance(Context context)
+    public static TimeOnlyBuilderLogicModel getNewInstance(Context context)
     {
-        return new TimeOnlyBuilderModel(context);
+        return new TimeOnlyBuilderLogicModel(context);
     }
 
     public RatingStatusEnum getRatingStatus()  throws Exception
@@ -116,6 +117,11 @@ public class TimeOnlyBuilderModel
 
         try
         {
+            if (client == null)
+            {
+                throw new IllegalStateException("client is null");
+            }
+
             currentDate = System.currentTimeMillis();
             installationDate = getAppInstallationDate();
             timeSiceInstallation = installationDate + periodCriteria;
@@ -210,6 +216,28 @@ public class TimeOnlyBuilderModel
 //        sdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
 
         return sdf.format(date);
+    }
+
+    private void addAppUsage()
+    {
+//        int year = Calendar.getInstance().get(Calendar.YEAR);
+//        int day = Calendar.getInstance().get(Calendar.DATE);
+
+        Calendar cal = Calendar.getInstance();
+
+        long l = cal.getTimeInMillis();
+        cal.setTimeInMillis(l);
+
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+
+        String days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+
+
+
+        String str = "";
+
     }
 
 }

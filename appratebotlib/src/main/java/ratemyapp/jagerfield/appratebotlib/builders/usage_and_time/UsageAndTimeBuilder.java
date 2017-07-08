@@ -1,15 +1,15 @@
-package ratemyapp.jagerfield.appratebotlib.builders.time_only;
+package ratemyapp.jagerfield.appratebotlib.builders.usage_and_time;
 
 import android.app.Activity;
 import android.content.Context;
-
 import java.util.concurrent.TimeUnit;
-
-import ratemyapp.jagerfield.appratebotlib.builders.IBuilderFunctions;
 import ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum;
+import ratemyapp.jagerfield.appratebotlib.builders.IBuilderFunctions;
+import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnlyBuilder;
+import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnlyBuilderLogicModel;
 import ratemyapp.jagerfield.appratebotlib.dialog.RatingDialog;
 
-public class TimeOnlyBuilder implements IBuilderFunctions
+public class UsageAndTimeBuilder implements IBuilderFunctions
 {
     private static Activity activity;
     private static Context context;
@@ -19,16 +19,16 @@ public class TimeOnlyBuilder implements IBuilderFunctions
     private TimeUnit timeUnit;
     private int timePeriod = -1000;
 
-    private static TimeOnlyBuilder instance;
+    private static UsageAndTimeBuilder instance;
 
-    public TimeOnlyBuilder()
+    public UsageAndTimeBuilder()
     { }
 
-    public static TimeOnlyBuilder getNewInstance(Activity activity)
+    public static UsageAndTimeBuilder getNewInstance(Activity activity)
     {
-        TimeOnlyBuilder.activity = activity;
+        activity = activity;
         context = activity.getApplicationContext();
-        return new TimeOnlyBuilder();
+        return new UsageAndTimeBuilder();
     }
 
     public String getTitle() {
@@ -73,7 +73,7 @@ public class TimeOnlyBuilder implements IBuilderFunctions
     public void build()
     {
         final RatingDialog[] obj = new RatingDialog[1];
-        final TimeOnlyBuilder builder = this;
+        final UsageAndTimeBuilder builder = this;
 
         try
         {
@@ -86,7 +86,7 @@ public class TimeOnlyBuilder implements IBuilderFunctions
             switch (ratingStatus)
             {
                 case NOT_ASKED:
-                    executor.isItOkToAskForFirstTime(activity, timeUnit, timePeriod, new ICallback() {
+                    executor.isItOkToAskForFirstTime(activity, timeUnit, timePeriod, new TimeOnlyBuilder.ICallback() {
                         @Override
                         public void showRatingDialog()
                         {
@@ -97,7 +97,7 @@ public class TimeOnlyBuilder implements IBuilderFunctions
                 case NEVER:
                     break;
                 case LATER:
-                    executor.isItTimeToAskAgain(activity, timeUnit, timePeriod, new ICallback() {
+                    executor.isItTimeToAskAgain(activity, timeUnit, timePeriod, new TimeOnlyBuilder.ICallback() {
                         @Override
                         public void showRatingDialog()
                         {
@@ -151,17 +151,4 @@ public class TimeOnlyBuilder implements IBuilderFunctions
     {
         void showRatingDialog();
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-

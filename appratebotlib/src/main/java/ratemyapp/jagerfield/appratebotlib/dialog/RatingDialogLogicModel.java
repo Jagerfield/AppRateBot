@@ -8,33 +8,38 @@ import android.widget.TextView;
 import ratemyapp.jagerfield.appratebotlib.R;
 import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnlyBuilder;
 
-public class RatingDialogModel
+public class RatingDialogLogicModel
 {
     private AppCompatDialog appCompatDialog;
-    private TimeOnlyBuilder builder;
+    private final String title;
+    private final String description;
+    private final int icon;
 
-    private RatingDialogModel(AppCompatDialog appCompatDialog, TimeOnlyBuilder builder)
+
+    private RatingDialogLogicModel(AppCompatDialog appCompatDialog, String title, String description, int icon)
     {
         this.appCompatDialog = appCompatDialog;
-        this.builder = builder;
+        this.title = title;
+        this.description = description;
+        this.icon = icon;
         initialize();
     }
 
-    public static RatingDialogModel getNewInstace(AppCompatDialog appCompatDialog, TimeOnlyBuilder builder)
+    public static RatingDialogLogicModel getNewInstace(AppCompatDialog appCompatDialog, String title, String description, int icon)
     {
-        return new RatingDialogModel(appCompatDialog, builder);
+        return new RatingDialogLogicModel(appCompatDialog, title, description, icon);
     }
 
     private void initialize()
     {
         TextView titleRatingDlg = (TextView) appCompatDialog.findViewById(R.id.titleRatingDlg);
-        titleRatingDlg.setText(builder.getTitle());
+        titleRatingDlg.setText(title);
 
         TextView descriptionRatingDlg = (TextView) appCompatDialog.findViewById(R.id.descriptionRatingDlg);
-        descriptionRatingDlg.setText(builder.getDescription());
+        descriptionRatingDlg.setText(description);
 
         ImageView iconRatingDlg = (ImageView) appCompatDialog.findViewById(R.id.iconRatingDlg);
-        iconRatingDlg.setImageDrawable(ContextCompat.getDrawable(appCompatDialog.getContext(), builder.getIcon()));
+        iconRatingDlg.setImageDrawable(ContextCompat.getDrawable(appCompatDialog.getContext(), icon));
 
         TextView okRatingBt = (TextView) appCompatDialog.findViewById(R.id.okRatingBt);
         okRatingBt.setOnClickListener(new View.OnClickListener() {

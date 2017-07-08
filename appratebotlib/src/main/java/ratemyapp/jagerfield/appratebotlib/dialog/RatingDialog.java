@@ -8,28 +8,47 @@ import android.support.v7.app.AppCompatDialog;
 import android.view.Window;
 import ratemyapp.jagerfield.appratebotlib.R;
 import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnlyBuilder;
+import ratemyapp.jagerfield.appratebotlib.builders.usage_and_time.UsageAndTimeBuilder;
 
 
 public class RatingDialog extends AppCompatDialog
 {
     private final Context context;
-    private final TimeOnlyBuilder executor;
+    private TimeOnlyBuilder timeBuilder;
+    private UsageAndTimeBuilder usageAndTimeBuilder;
+
+    private RatingDialog(Context context, TimeOnlyBuilder timeBuilder)
+    {
+        super(context);
+        this.context = context;
+        this.timeBuilder = timeBuilder;
+    }
+
+    private RatingDialog(Context context, UsageAndTimeBuilder usageAndTimeBuilder)
+    {
+        super(context);
+        this.context = context;
+        this.usageAndTimeBuilder = usageAndTimeBuilder;
+    }
+
+    public static RatingDialog getNewInstance(Context context, TimeOnlyBuilder builder)
+    {
+        return new RatingDialog(context, builder);
+    }
+
+    public static RatingDialog getNewInstance(Context context, UsageAndTimeBuilder builder)
+    {
+        return new RatingDialog(context, builder);
+    }
 
     public static TimeOnlyBuilder timeOnlyBuilder(Activity activity)
     {
         return TimeOnlyBuilder.getNewInstance(activity);
     }
 
-    private RatingDialog(Context context, TimeOnlyBuilder executor)
+    public static UsageAndTimeBuilder usageAndTimeBuilder(Activity activity)
     {
-        super(context);
-        this.context = context;
-        this.executor = executor;
-    }
-
-    public static RatingDialog getNewInstance(Context context, TimeOnlyBuilder executor)
-    {
-        return new RatingDialog(context, executor);
+        return UsageAndTimeBuilder.getNewInstance(activity);
     }
 
     @Override
@@ -41,7 +60,15 @@ public class RatingDialog extends AppCompatDialog
         setCancelable(false);
         setContentView(R.layout.ratings_dialog);
 
-        RatingDialogModel.getNewInstace(this, executor);
+        if (timeBuilder != null)
+        {
+            RatingDialogLogicModel.getNewInstace(this, timeBuilder.getTitle(), timeBuilder.getDescription(), timeBuilder.getIcon());
+        }
+        else if (usageAndTimeBuilder != null)
+        {
+            RatingDialogLogicModel.getNewInstace(this, usageAndTimeBuilder.getTitle(), usageAndTimeBuilder.getDescription(), usageAndTimeBuilder.getIcon());
+        }
+
     }
 }
 
