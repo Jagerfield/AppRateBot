@@ -23,21 +23,4 @@ public class MainActivity extends AppCompatActivity {
                 .build();
     }
 
-
-
-//    public long getAppInstallationDate()
-//    {
-//        PackageManager packageManager =  getPackageManager();
-//        long installTimeInMilliseconds;
-//
-//        PackageInfo packageInfo = null;
-//        try {
-//            packageInfo = packageManager.getPackageInfo(getPackageName(), 0);
-//        } catch (PackageManager.NameNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        installTimeInMilliseconds = packageInfo.firstInstallTime;
-//
-//        return installTimeInMilliseconds;
-//    }
 }

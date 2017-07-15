@@ -1,6 +1,5 @@
 package ratemyapp.jagerfield.appratebotlib.Utils;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
@@ -31,6 +30,6 @@ public class CLib
         String KEY_RATINGS_STATE = "KEY_RATINGS_STATE";
         String KEY_ASK_AGAIN_DATE = "KEY_ASK_AGAIN_DATE";
         String KEY_USAGE_COUNT = "KEY_USAGE_COUNT";
-        String KEY_LAST_USAGE_DATE = "KEY_LAST_USAGE_DATE";
+        String KEY_LAST_USAGE_DATE = "KEY_LAST_USAGE_DATE"; //Used to know when to update the usage counter
     }
 }

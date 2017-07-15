@@ -1,36 +1,44 @@
-package ratemyapp.jagerfield.appratebotlib.dialog;
+package ratemyapp.jagerfield.appratebotlib.builders;
 
+import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import ratemyapp.jagerfield.appratebotlib.R;
+import ratemyapp.jagerfield.appratebotlib.Utils.CLib;
+import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
 
-public class RatingDialogLogicModel
+public class RatingDialogPresenter
 {
+    private final Context context;
     private AppCompatDialog appCompatDialog;
-    private final String title;
-    private final String description;
-    private final int icon;
+    private String title;
+    private String description;
+    private int icon;
 
-
-    private RatingDialogLogicModel(AppCompatDialog appCompatDialog, String title, String description, int icon)
+    private RatingDialogPresenter(AppCompatDialog appCompatDialog, String title, String description, int icon)
     {
         this.appCompatDialog = appCompatDialog;
+        this.context = appCompatDialog.getContext();
         this.title = title;
         this.description = description;
         this.icon = icon;
         initialize();
     }
 
-    public static RatingDialogLogicModel getNewInstace(AppCompatDialog appCompatDialog, String title, String description, int icon)
+    public static RatingDialogPresenter getNewInstace(AppCompatDialog appCompatDialog, String title, String description, int icon)
     {
-        return new RatingDialogLogicModel(appCompatDialog, title, description, icon);
+        return new RatingDialogPresenter(appCompatDialog, title, description, icon);
     }
 
     private void initialize()
     {
+        /**
+         * Initialize UI elements
+         */
         TextView titleRatingDlg = (TextView) appCompatDialog.findViewById(R.id.titleRatingDlg);
         titleRatingDlg.setText(title);
 
@@ -53,14 +61,25 @@ public class RatingDialogLogicModel
             @Override
             public void onClick(View view) {
 
+                int state = RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER);
+                PreferenceUtil.setInt(appCompatDialog.getContext(), CLib.IKEYS.KEY_RATINGS_STATE, state);
+                appCompatDialog.dismiss();
             }
         });
 
         TextView laterRatingBt = (TextView) appCompatDialog.findViewById(R.id.laterRatingBt);
-        laterRatingBt.setOnClickListener(new View.OnClickListener() {
+        laterRatingBt.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View view) {
 
+                int state = RatingStatusEnum.fromEnumToInt(RatingStatusEnum.LATER);
+                PreferenceUtil.setInt(appCompatDialog.getContext(), CLib.IKEYS.KEY_RATINGS_STATE, state);
+
+                long currentDate = System.currentTimeMillis();
+                PreferenceUtil.setLong(appCompatDialog.getContext(), CLib.IKEYS.KEY_ASK_AGAIN_DATE, currentDate);
+
+                appCompatDialog.dismiss();
             }
         });
     }

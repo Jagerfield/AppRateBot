@@ -5,6 +5,7 @@ import android.content.Context;
 
 import java.util.concurrent.TimeUnit;
 
+import ratemyapp.jagerfield.appratebotlib.builders.BuilderHelper;
 import ratemyapp.jagerfield.appratebotlib.builders.IBuilderFunctions;
 import ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum;
 import ratemyapp.jagerfield.appratebotlib.dialog.RatingDialog;
@@ -79,7 +80,7 @@ public class TimeOnlyBuilder implements IBuilderFunctions
         {
             checkUp();
 
-            final TimeOnlyBuilderLogicModel executor = TimeOnlyBuilderLogicModel.getNewInstance(context);
+            final BuilderHelper executor = BuilderHelper.getNewInstance(context);
             RatingStatusEnum ratingStatus;
             ratingStatus = executor.getRatingStatus();
 

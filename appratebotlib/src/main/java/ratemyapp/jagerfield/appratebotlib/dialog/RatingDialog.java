@@ -7,15 +7,36 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatDialog;
 import android.view.Window;
 import ratemyapp.jagerfield.appratebotlib.R;
+import ratemyapp.jagerfield.appratebotlib.builders.RatingDialogPresenter;
+import ratemyapp.jagerfield.appratebotlib.builders.UsageMonitor;
 import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnlyBuilder;
 import ratemyapp.jagerfield.appratebotlib.builders.usage_and_time.UsageAndTimeBuilder;
-
 
 public class RatingDialog extends AppCompatDialog
 {
     private final Context context;
     private TimeOnlyBuilder timeBuilder;
     private UsageAndTimeBuilder usageAndTimeBuilder;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        setCancelable(false);
+        setContentView(R.layout.ratings_dialog);
+
+        if (timeBuilder != null)
+        {
+            RatingDialogPresenter.getNewInstace(this, timeBuilder.getTitle(), timeBuilder.getDescription(), timeBuilder.getIcon());
+        }
+        else if (usageAndTimeBuilder != null)
+        {
+            RatingDialogPresenter.getNewInstace(this, usageAndTimeBuilder.getTitle(), usageAndTimeBuilder.getDescription(), usageAndTimeBuilder.getIcon());
+        }
+
+    }
 
     private RatingDialog(Context context, TimeOnlyBuilder timeBuilder)
     {
@@ -43,33 +64,26 @@ public class RatingDialog extends AppCompatDialog
 
     public static TimeOnlyBuilder timeOnlyBuilder(Activity activity)
     {
+        usageCounter(activity);
         return TimeOnlyBuilder.getNewInstance(activity);
     }
 
     public static UsageAndTimeBuilder usageAndTimeBuilder(Activity activity, int usageMaxCount)
     {
+        usageCounter(activity);
         return UsageAndTimeBuilder.getNewInstance(activity, usageMaxCount);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+    private static void usageCounter(Context context)
     {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        setCancelable(false);
-        setContentView(R.layout.ratings_dialog);
-
-        if (timeBuilder != null)
-        {
-            RatingDialogLogicModel.getNewInstace(this, timeBuilder.getTitle(), timeBuilder.getDescription(), timeBuilder.getIcon());
-        }
-        else if (usageAndTimeBuilder != null)
-        {
-            RatingDialogLogicModel.getNewInstace(this, usageAndTimeBuilder.getTitle(), usageAndTimeBuilder.getDescription(), usageAndTimeBuilder.getIcon());
-        }
-
+        UsageMonitor.resetUsageAndDate(context);
+        /**
+         * Check if the usage count should be incremented
+         */
+        UsageMonitor.newInstance(context).updateUsageInformation();
     }
+
+
 }
 
 //ContextCompat.getColor(context, builder.titleTextColor)
