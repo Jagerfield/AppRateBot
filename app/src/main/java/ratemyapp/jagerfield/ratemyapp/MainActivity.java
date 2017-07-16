@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
 
-import ratemyapp.jagerfield.appratebotlib.builders.UsageMonitor;
+import ratemyapp.jagerfield.appratebotlib.dialog.UsageMonitor;
 import ratemyapp.jagerfield.appratebotlib.dialog.RatingDialog;
 
 public class MainActivity extends AppCompatActivity
@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity
                 .setTitle("Thanks for using the app")
                 .setDescription("If it has been useful to you\nwould you kindly rate it on GooglePlay")
                 .setIcon(R.mipmap.ic_launcher)
-                .setActivationTimeAndUsageCount(TimeUnit.SECONDS, 60, 3)
+                .setActivationTimeAndUsageCount(TimeUnit.SECONDS, 60, 1)
                 .build();
 
         int i = UsageMonitor.getUsageCount(this);

@@ -1,4 +1,4 @@
-package ratemyapp.jagerfield.appratebotlib.builders;
+package ratemyapp.jagerfield.appratebotlib.dialog;
 
 import android.content.Context;
 
@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import ratemyapp.jagerfield.appratebotlib.Utils.CLib;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
+import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingStatusEnum;
 
 /**
  * Two main functions
@@ -105,6 +106,7 @@ public class UsageMonitor
 
         PreferenceUtil.setLong(context, CLib.IKEYS.KEY_LAST_USAGE_DATE, lastUsageDate);
         PreferenceUtil.setInt(context, CLib.IKEYS.KEY_USAGE_COUNT, 0);
+        PreferenceUtil.setInt(context, CLib.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NOT_ASKED));
     }
 
     public void checkPreferencesLastUsageDate(Context context)

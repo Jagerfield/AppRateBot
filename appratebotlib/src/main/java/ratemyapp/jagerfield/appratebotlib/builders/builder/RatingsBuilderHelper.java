@@ -1,26 +1,24 @@
-package ratemyapp.jagerfield.appratebotlib.builders;
+package ratemyapp.jagerfield.appratebotlib.builders.builder;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.SystemClock;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 import ratemyapp.jagerfield.appratebotlib.Utils.CLib;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
-import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnlyBuilder;
 
-public class ShowRatingsDialogHelper
+public class RatingsBuilderHelper
 {
-    private ShowRatingsDialogHelper(Context context)
+    private RatingsBuilderHelper(Context context)
     {
         this.context = context;
     }
 
-    public static ShowRatingsDialogHelper getNewInstance(Context context)
+    public static RatingsBuilderHelper getNewInstance(Context context)
     {
-        return new ShowRatingsDialogHelper(context);
+        return new RatingsBuilderHelper(context);
     }
 
     public Context context;
@@ -96,7 +94,7 @@ public class ShowRatingsDialogHelper
         return period;
     }
 
-    public boolean isItOkToAskForFirstTime(Activity activity, TimeUnit timeUnit, int timeAmount, TimeOnlyBuilder.ICallback client) throws Exception
+    public boolean isItOkToAskForFirstTime(Activity activity, TimeUnit timeUnit, int timeAmount, RatingsBuilder.ICallback client) throws Exception
     {
         boolean result = false;
         long currentDate = 0l;
@@ -121,7 +119,7 @@ public class ShowRatingsDialogHelper
        return result;
     }
 
-    public boolean isItTimeToAskAgain(Activity activity, TimeUnit timeUnit, int timeAmount, TimeOnlyBuilder.ICallback client)
+    public boolean isItTimeToAskAgain(Activity activity, TimeUnit timeUnit, int timeAmount, RatingsBuilder.ICallback client)
     {
         boolean result = false;
         long currentDate = 0l;

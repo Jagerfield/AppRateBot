@@ -1,15 +1,21 @@
-package ratemyapp.jagerfield.appratebotlib.builders;
+package ratemyapp.jagerfield.appratebotlib.dialog;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
+import java.util.Calendar;
 import ratemyapp.jagerfield.appratebotlib.R;
 import ratemyapp.jagerfield.appratebotlib.Utils.CLib;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
+import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingStatusEnum;
+
 
 public class RatingDialogPresenter
 {
@@ -53,6 +59,9 @@ public class RatingDialogPresenter
             @Override
             public void onClick(View view) {
 
+                launchMarket();
+                PreferenceUtil.setInt(appCompatDialog.getContext(), CLib.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
+                appCompatDialog.dismiss();
             }
         });
 
@@ -61,8 +70,7 @@ public class RatingDialogPresenter
             @Override
             public void onClick(View view) {
 
-                int state = RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER);
-                PreferenceUtil.setInt(appCompatDialog.getContext(), CLib.IKEYS.KEY_RATINGS_STATE, state);
+                PreferenceUtil.setInt(appCompatDialog.getContext(), CLib.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
                 appCompatDialog.dismiss();
             }
         });
@@ -73,16 +81,26 @@ public class RatingDialogPresenter
             @Override
             public void onClick(View view) {
 
-                int state = RatingStatusEnum.fromEnumToInt(RatingStatusEnum.LATER);
-                PreferenceUtil.setInt(appCompatDialog.getContext(), CLib.IKEYS.KEY_RATINGS_STATE, state);
-
-                long currentDate = System.currentTimeMillis();
-                PreferenceUtil.setLong(appCompatDialog.getContext(), CLib.IKEYS.KEY_ASK_AGAIN_DATE, currentDate);
-
+                PreferenceUtil.setInt(appCompatDialog.getContext(), CLib.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.LATER));
+                PreferenceUtil.setLong(appCompatDialog.getContext(), CLib.IKEYS.KEY_ASK_AGAIN_DATE, UsageMonitor.getCurrentCal().getTimeInMillis());
                 appCompatDialog.dismiss();
             }
         });
     }
+
+    private void launchMarket() {
+        Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=jagerfield.ContentResolverVsCursorLoader");
+        Intent myAppLinkToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        try
+        {
+            context.startActivity(myAppLinkToMarket);
+        }
+        catch (ActivityNotFoundException e)
+        {
+            Toast.makeText(context, " unable to find market app", Toast.LENGTH_LONG).show();
+        }
+    }
+
 }
 
 

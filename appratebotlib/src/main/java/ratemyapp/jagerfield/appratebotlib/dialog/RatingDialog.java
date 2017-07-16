@@ -7,14 +7,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatDialog;
 import android.view.Window;
 import ratemyapp.jagerfield.appratebotlib.R;
-import ratemyapp.jagerfield.appratebotlib.builders.RatingDialogPresenter;
-import ratemyapp.jagerfield.appratebotlib.builders.UsageMonitor;
-import ratemyapp.jagerfield.appratebotlib.builders.usage_and_time.RatingsBuilder;
+import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingsBuilder;
 
 public class RatingDialog extends AppCompatDialog
 {
     private final Context context;
-//    private TimeOnlyBuilder timeBuilder;
     private RatingsBuilder ratingsBuilder;
 
     @Override
@@ -26,22 +23,11 @@ public class RatingDialog extends AppCompatDialog
         setCancelable(false);
         setContentView(R.layout.ratings_dialog);
 
-//        if (timeBuilder != null)
-//        {
-//            RatingDialogPresenter.getNewInstace(this, timeBuilder.getTitle(), timeBuilder.getDescription(), timeBuilder.getIcon());
-//        }
         if (ratingsBuilder != null)
         {
             RatingDialogPresenter.getNewInstace(this, ratingsBuilder.getTitle(), ratingsBuilder.getDescription(), ratingsBuilder.getIcon());
         }
     }
-
-//    private RatingDialog(Context context, TimeOnlyBuilder timeBuilder)
-//    {
-//        super(context);
-//        this.context = context;
-//        this.timeBuilder = timeBuilder;
-//    }
 
     private RatingDialog(Context context, RatingsBuilder ratingsBuilder)
     {
@@ -50,21 +36,10 @@ public class RatingDialog extends AppCompatDialog
         this.ratingsBuilder = ratingsBuilder;
     }
 
-//    public static RatingDialog getNewInstance(Context context, TimeOnlyBuilder builder)
-//    {
-//        return new RatingDialog(context, builder);
-//    }
-
     public static RatingDialog getNewInstance(Context context, RatingsBuilder builder)
     {
         return new RatingDialog(context, builder);
     }
-
-//    public static TimeOnlyBuilder timeOnlyBuilder(Activity activity)
-//    {
-//        usageCounter(activity);
-//        return TimeOnlyBuilder.getNewInstance(activity);
-//    }
 
     public static RatingsBuilder usageAndTimeBuilder(Activity activity)
     {

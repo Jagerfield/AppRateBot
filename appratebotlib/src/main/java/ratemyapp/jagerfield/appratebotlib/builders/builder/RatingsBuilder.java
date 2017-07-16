@@ -1,14 +1,10 @@
-package ratemyapp.jagerfield.appratebotlib.builders.usage_and_time;
+package ratemyapp.jagerfield.appratebotlib.builders.builder;
 
 import android.app.Activity;
 import android.content.Context;
 import java.util.concurrent.TimeUnit;
 import ratemyapp.jagerfield.appratebotlib.Utils.CLib;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
-import ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum;
-import ratemyapp.jagerfield.appratebotlib.builders.IBuilderFunctions;
-import ratemyapp.jagerfield.appratebotlib.builders.ShowRatingsDialogHelper;
-import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnlyBuilder;
 import ratemyapp.jagerfield.appratebotlib.dialog.RatingDialog;
 
 public class RatingsBuilder implements IBuilderFunctions
@@ -21,7 +17,7 @@ public class RatingsBuilder implements IBuilderFunctions
     private int icon = 0;
     private TimeUnit timeUnit;
     private int timePeriod = 0;
-    private ShowRatingsDialogHelper showRatingsDialogHelper;
+    private RatingsBuilderHelper ratingsBuilderHelper;
     private static RatingsBuilder instance;
     private BuilderTypeEnum builderType;
 
@@ -29,7 +25,7 @@ public class RatingsBuilder implements IBuilderFunctions
     {
         this.activity = activity;
         this.context = activity.getApplicationContext();
-        showRatingsDialogHelper = ShowRatingsDialogHelper.getNewInstance(context);
+        ratingsBuilderHelper = RatingsBuilderHelper.getNewInstance(context);
     }
 
     public static RatingsBuilder getNewInstance(Activity activity)
@@ -95,7 +91,7 @@ public class RatingsBuilder implements IBuilderFunctions
         try
         {
             checkParamerters();
-            RatingStatusEnum ratingStatus = showRatingsDialogHelper.getRatingStatus();
+            RatingStatusEnum ratingStatus = ratingsBuilderHelper.getRatingStatus();
 
             if (builderType == BuilderTypeEnum.TIME_AND_USAGE_COUNT)
             {
@@ -106,7 +102,7 @@ public class RatingsBuilder implements IBuilderFunctions
             switch (ratingStatus)
             {
                 case NOT_ASKED:
-                    showRatingsDialogHelper.isItOkToAskForFirstTime(activity, timeUnit, timePeriod, new TimeOnlyBuilder.ICallback() {
+                    ratingsBuilderHelper.isItOkToAskForFirstTime(activity, timeUnit, timePeriod, new RatingsBuilder.ICallback() {
                         @Override
                         public void showRatingDialog()
                         {
@@ -117,7 +113,7 @@ public class RatingsBuilder implements IBuilderFunctions
                 case NEVER:
                     break;
                 case LATER:
-                    showRatingsDialogHelper.isItTimeToAskAgain(activity, timeUnit, timePeriod, new TimeOnlyBuilder.ICallback() {
+                    ratingsBuilderHelper.isItTimeToAskAgain(activity, timeUnit, timePeriod, new RatingsBuilder.ICallback() {
                         @Override
                         public void showRatingDialog()
                         {
