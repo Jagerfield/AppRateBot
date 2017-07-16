@@ -76,7 +76,7 @@ public class RatingDialog extends AppCompatDialog
 
     private static void usageCounter(Context context)
     {
-        UsageMonitor.resetUsageAndDate(context);
+//        UsageMonitor.resetUsageAndDate(context);
         /**
          * Check if the usage count should be incremented
          */
