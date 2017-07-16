@@ -65,7 +65,8 @@ public class UsageMonitor
             int day = getCurrentCal().get(Calendar.DAY_OF_WEEK);
             int hours = getCurrentCal().get(Calendar.HOUR_OF_DAY);
             int minutes = getCurrentCal().get(Calendar.MINUTE);
-            int mseconds = getCurrentCal().get(Calendar.SECOND);
+            int seconds = getCurrentCal().get(Calendar.SECOND);
+            int milliSec = getCurrentCal().get(Calendar.MILLISECOND);
 
             //Update last usage date
             PreferenceUtil.setLong(context, CLib.IKEYS.KEY_LAST_USAGE_DATE, getCurrentCal().getTimeInMillis());
@@ -94,26 +95,8 @@ public class UsageMonitor
         String days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
     }
 
+
     public Calendar getLastUsageCal(Context context)
-    {
-        Calendar lastUsageCal = getSavedLastUsageDate(context);
-        lastUsageCal.setTimeZone(TimeZone.getDefault());
-
-        lastUsageCal.set(Calendar.HOUR, 0);lastUsageCal.set(Calendar.MINUTE, 0);lastUsageCal.set(Calendar.SECOND, 0);lastUsageCal.set(Calendar.MILLISECOND, 0);
-
-        int year = lastUsageCal.get(Calendar.YEAR);
-        int month = lastUsageCal.get(Calendar.MONTH);
-        int week = lastUsageCal.get(Calendar.WEEK_OF_YEAR);
-        int day = lastUsageCal.get(Calendar.DAY_OF_WEEK);
-        int hours = lastUsageCal.get(Calendar.HOUR_OF_DAY);
-        int minutes = lastUsageCal.get(Calendar.MINUTE);
-        int mseconds = lastUsageCal.get(Calendar.SECOND);
-
-        return lastUsageCal;
-    }
-
-
-    public Calendar getSavedLastUsageDate(Context context)
     {
         Calendar lastCal = getCurrentCal();
 
@@ -125,11 +108,16 @@ public class UsageMonitor
         }
 
         lastCal.setTimeInMillis(lastSavedDate);
+        lastCal.setTimeZone(TimeZone.getDefault());
+        lastCal.set(Calendar.HOUR_OF_DAY, 0);lastCal.set(Calendar.MINUTE, 0);lastCal.set(Calendar.SECOND, 0);lastCal.set(Calendar.MILLISECOND, 0);
 
         int year = lastCal.get(Calendar.YEAR);
         int month = lastCal.get(Calendar.MONTH);
         int week = lastCal.get(Calendar.WEEK_OF_YEAR);
         int day = lastCal.get(Calendar.DAY_OF_WEEK);
+        int hours = lastCal.get(Calendar.HOUR_OF_DAY);
+        int minutes = lastCal.get(Calendar.MINUTE);
+        int mseconds = lastCal.get(Calendar.SECOND);
 
         return lastCal;
     }
@@ -138,7 +126,7 @@ public class UsageMonitor
     {
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getDefault());
-        cal.set(Calendar.HOUR, 0);cal.set(Calendar.MINUTE, 0);cal.set(Calendar.SECOND, 0);cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.HOUR_OF_DAY, 0);cal.set(Calendar.MINUTE, 0);cal.set(Calendar.SECOND, 0);cal.set(Calendar.MILLISECOND, 0);
 //        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_WEEK), 0,0,0); This won't set the Milliseconds to zero and will cause issues
         return cal;
     }
@@ -147,22 +135,22 @@ public class UsageMonitor
     {
         Calendar cal = getCurrentCal();
 
-//        cal.set(Calendar.YEAR, 1970);
-//        cal.set(Calendar.MONTH, 1);
-////        cal.set(Calendar.WEEK_OF_YEAR, 1);
-//        cal.set(Calendar.DAY_OF_WEEK, 1);
-//        cal.set(Calendar.HOUR_OF_DAY, 0);
-//        cal.set(Calendar.MINUTE, 0);
-//        cal.set(Calendar.SECOND, 0);
-//        cal.set(Calendar.MILLISECOND, 0);
-
-        cal.set(Calendar.YEAR, 2017);
-        cal.set(Calendar.MONTH, 6);
-        cal.set(Calendar.DAY_OF_MONTH, 2);
+        cal.set(Calendar.YEAR, 1970);
+        cal.set(Calendar.MONTH, 1);
+//        cal.set(Calendar.WEEK_OF_YEAR, 1);
+        cal.set(Calendar.DAY_OF_WEEK, 1);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
+
+//        cal.set(Calendar.YEAR, 2017);
+//        cal.set(Calendar.MONTH, 6);
+//        cal.set(Calendar.DAY_OF_MONTH, 2);
+//        cal.set(Calendar.HOUR_OF_DAY, 0);
+//        cal.set(Calendar.MINUTE, 0);
+//        cal.set(Calendar.SECOND, 0);
+//        cal.set(Calendar.MILLISECOND, 0);
 
         long lastSavedDate= cal.getTimeInMillis();
 
@@ -170,11 +158,77 @@ public class UsageMonitor
 
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
+        int week = cal.get(Calendar.WEEK_OF_YEAR);
         int day = cal.get(Calendar.DAY_OF_WEEK);
+        int hours = cal.get(Calendar.HOUR_OF_DAY);
+        int minutes = cal.get(Calendar.MINUTE);
+        int mseconds = cal.get(Calendar.SECOND);
 
         PreferenceUtil.setInt(context, CLib.IKEYS.KEY_USAGE_COUNT, 0);
     }
 
+    private class CalValues
+    {
+        private int year ;
+        private int month;
+        private int week;
+        private int dayOfMonth;
+        private int dayOfWeek;
+        private int hourOfDay;
+        private int minutes ;
+        private int seconds ;
+        private int milliSec ;
+        private Calendar cal;
+
+        public CalValues(Calendar cal) {
+            this.cal = cal;
+            getYear();
+            getMonth();
+            getWeek();
+            getDayOfMonth();
+            getDayOfWeek();
+            getHourOfDay();
+            getMinutes();
+            getSeconds();
+            getMilliSec();
+        }
+
+        public int getYear() {
+            return cal.get(Calendar.YEAR);
+        }
+
+        public int getMonth() {
+            return cal.get(Calendar.MONTH);
+        }
+
+        public int getWeek() {
+            return cal.get(Calendar.WEEK_OF_YEAR);
+        }
+
+        public int getDayOfMonth() {
+            return cal.get(Calendar.DAY_OF_MONTH);
+        }
+
+        public int getDayOfWeek() {
+            return cal.get(Calendar.DAY_OF_WEEK);
+        }
+
+        public int getHourOfDay() {
+            return  cal.get(Calendar.HOUR_OF_DAY);
+        }
+
+        public int getMinutes() {
+            return cal.get(Calendar.MINUTE);
+        }
+
+        public int getSeconds() {
+            return cal.get(Calendar.SECOND);
+        }
+
+        public int getMilliSec() {
+            return cal.get(Calendar.MILLISECOND);
+        }
+    }
 }
 
 
