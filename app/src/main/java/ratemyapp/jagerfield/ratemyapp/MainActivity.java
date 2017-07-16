@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity
                 .setTitle("Thanks for using the app")
                 .setDescription("If it has been useful to you\nwould you kindly rate it on GooglePlay")
                 .setIcon(R.mipmap.ic_launcher)
-                .setActivationTimeAndUsageCount(TimeUnit.SECONDS, 60, 1)
+                .setActivationTimeAndUsageCount(TimeUnit.SECONDS, 10, 3)
                 .build();
 
         int i = UsageMonitor.getUsageCount(this);

@@ -96,7 +96,7 @@ public class RatingsBuilder implements IBuilderFunctions
             if (builderType == BuilderTypeEnum.TIME_AND_USAGE_COUNT)
             {
                 int usageCount = PreferenceUtil.getInt(context, CLib.IKEYS.KEY_USAGE_COUNT, 0);
-                if (usageCount <= usageMaxCount) { throw new IllegalStateException("Usage count is not enough"); }
+                if (usageCount < usageMaxCount) { throw new IllegalStateException("Usage count is not enough"); }
             }
 
             switch (ratingStatus)

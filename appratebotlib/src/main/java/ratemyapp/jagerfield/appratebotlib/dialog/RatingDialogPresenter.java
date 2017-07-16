@@ -82,6 +82,7 @@ public class RatingDialogPresenter
             public void onClick(View view) {
 
                 PreferenceUtil.setInt(appCompatDialog.getContext(), CLib.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.LATER));
+                PreferenceUtil.setInt(appCompatDialog.getContext(), CLib.IKEYS.KEY_USAGE_COUNT, 0);
                 PreferenceUtil.setLong(appCompatDialog.getContext(), CLib.IKEYS.KEY_ASK_AGAIN_DATE, UsageMonitor.getCurrentCal().getTimeInMillis());
                 appCompatDialog.dismiss();
             }
