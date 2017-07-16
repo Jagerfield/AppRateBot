@@ -11,9 +11,9 @@ import ratemyapp.jagerfield.appratebotlib.builders.ShowRatingsDialogHelper;
 import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnlyBuilder;
 import ratemyapp.jagerfield.appratebotlib.dialog.RatingDialog;
 
-public class UsageAndTimeBuilder implements IBuilderFunctions
+public class RatingsBuilder implements IBuilderFunctions
 {
-    private final int usageMaxCount;
+    private int usageMaxCount;
     private final Context context;
     private final Activity activity;
     private String title;
@@ -22,22 +22,19 @@ public class UsageAndTimeBuilder implements IBuilderFunctions
     private TimeUnit timeUnit;
     private int timePeriod = 0;
     private ShowRatingsDialogHelper showRatingsDialogHelper;
+    private static RatingsBuilder instance;
+    private BuilderTypeEnum builderType;
 
-    private static UsageAndTimeBuilder instance;
-
-    public UsageAndTimeBuilder(Activity activity, int usageMaxCount)
+    public RatingsBuilder(Activity activity)
     {
-        this.usageMaxCount = usageMaxCount;
         this.activity = activity;
         this.context = activity.getApplicationContext();
-
         showRatingsDialogHelper = ShowRatingsDialogHelper.getNewInstance(context);
-//        showRatingsDialogHelper.updateUsageCountAndDate();//Increase count if the app was last used a day ago
     }
 
-    public static UsageAndTimeBuilder getNewInstance(Activity activity, int usageCount)
+    public static RatingsBuilder getNewInstance(Activity activity)
     {
-        return new UsageAndTimeBuilder(activity, usageCount);
+        return new RatingsBuilder(activity);
     }
 
     public String getTitle() {
@@ -71,8 +68,19 @@ public class UsageAndTimeBuilder implements IBuilderFunctions
     }
 
     @Override
-    public IBuilderFunctions setTimeUnitAndAmount(TimeUnit timeUnit, int timeAmount)
+    public IBuilderFunctions setActivationTime(TimeUnit timeUnit, int timeAmount)
     {
+        this.builderType = BuilderTypeEnum.TIME_ONLY;
+        this.timePeriod = timeAmount;
+        this.timeUnit = timeUnit;
+        return this;
+    }
+
+    @Override
+    public IBuilderFunctions setActivationTimeAndUsageCount(TimeUnit timeUnit, int timeAmount, int usageMaxCount)
+    {
+        this.builderType = BuilderTypeEnum.TIME_AND_USAGE_COUNT;
+        this.usageMaxCount = usageMaxCount;
         this.timePeriod = timeAmount;
         this.timeUnit = timeUnit;
         return this;
@@ -82,18 +90,18 @@ public class UsageAndTimeBuilder implements IBuilderFunctions
     public void build()
     {
         final RatingDialog[] obj = new RatingDialog[1];
-        final UsageAndTimeBuilder builder = this;
+        final RatingsBuilder builder = this;
 
         try
         {
-            //Check usage count
-            int usageCount = PreferenceUtil.getInt(context, CLib.IKEYS.KEY_USAGE_COUNT, 0);
-
-            if (usageCount <= usageMaxCount) { throw new IllegalStateException("Usage not enough is null"); }
-
             checkParamerters();
-            RatingStatusEnum ratingStatus;
-            ratingStatus = showRatingsDialogHelper.getRatingStatus();
+            RatingStatusEnum ratingStatus = showRatingsDialogHelper.getRatingStatus();
+
+            if (builderType == BuilderTypeEnum.TIME_AND_USAGE_COUNT)
+            {
+                int usageCount = PreferenceUtil.getInt(context, CLib.IKEYS.KEY_USAGE_COUNT, 0);
+                if (usageCount <= usageMaxCount) { throw new IllegalStateException("Usage count is not enough"); }
+            }
 
             switch (ratingStatus)
             {
@@ -162,5 +170,36 @@ public class UsageAndTimeBuilder implements IBuilderFunctions
     public interface ICallback
     {
         void showRatingDialog();
+    }
+
+    public enum BuilderTypeEnum
+    {
+        TIME_ONLY, TIME_AND_USAGE_COUNT;
+
+        public static BuilderTypeEnum fromIntToEnum(int value)
+        {
+            switch (value)
+            {
+                case 0:
+                    return TIME_ONLY;
+                case 1:
+                    return TIME_AND_USAGE_COUNT;
+                default:
+                    return TIME_ONLY;
+            }
+        }
+
+        public static int fromEnumToInt(BuilderTypeEnum value)
+        {
+            switch (value)
+            {
+                case TIME_ONLY:
+                    return 0;
+                case TIME_AND_USAGE_COUNT:
+                    return 1;
+                default:
+                    return 0;
+            }
+        }
     }
 }

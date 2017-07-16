@@ -65,10 +65,9 @@ public class UsageMonitor
         }
     }
 
-    public Calendar getLastUsageCal(Context context)
+    public static Calendar getLastUsageCal(Context context)
     {
         Calendar lastCal = getCurrentCal();
-
         long lastSavedDate = PreferenceUtil.getLong(context, CLib.IKEYS.KEY_LAST_USAGE_DATE, 0l);
         lastCal.setTimeInMillis(lastSavedDate);
         lastCal = customizeCal(lastCal);
@@ -76,17 +75,17 @@ public class UsageMonitor
         return lastCal;
     }
 
-    public Calendar getCurrentCal()
+    public static Calendar getCurrentCal()
     {
         Calendar cal = Calendar.getInstance();
         cal = customizeCal(cal);
         return cal;
     }
 
-    public Calendar customizeCal(Calendar cal)
+    public static Calendar customizeCal(Calendar cal)
     {
         cal.setTimeZone(TimeZone.getDefault());
-        cal.set(Calendar.HOUR_OF_DAY, 0);cal.set(Calendar.MINUTE, 0);cal.set(Calendar.SECOND, 0);cal.set(Calendar.MILLISECOND, 0);
+//        cal.set(Calendar.HOUR_OF_DAY, 0);cal.set(Calendar.MINUTE, 0);cal.set(Calendar.SECOND, 0);cal.set(Calendar.MILLISECOND, 0);
         return cal;
     }
 
@@ -149,6 +148,12 @@ public class UsageMonitor
 //        sdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
 
         return sdf.format(date);
+    }
+
+    public static int getUsageCount(Context context)
+    {
+       int count = PreferenceUtil.getInt(context, CLib.IKEYS.KEY_USAGE_COUNT, 0);
+        return count;
     }
 }
 

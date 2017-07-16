@@ -161,7 +161,6 @@ public class ShowRatingsDialogHelper
 
         return result;
     }
-
 }
 
 

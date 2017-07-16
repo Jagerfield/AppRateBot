@@ -63,11 +63,16 @@ public class TimeOnlyBuilder implements IBuilderFunctions
     }
 
     @Override
-    public IBuilderFunctions setTimeUnitAndAmount(TimeUnit timeUnit, int timeAmount)
+    public IBuilderFunctions setActivationTime(TimeUnit timeUnit, int timeAmount)
     {
         this.timePeriod = timeAmount;
         this.timeUnit = timeUnit;
         return this;
+    }
+
+    @Override
+    public IBuilderFunctions setActivationTimeAndUsageCount(TimeUnit timeUnit, int timeAmount, int usagewCount) {
+        return null;
     }
 
     @Override
@@ -94,7 +99,7 @@ public class TimeOnlyBuilder implements IBuilderFunctions
                         @Override
                         public void showRatingDialog()
                         {
-                            RatingDialog.getNewInstance(activity, builder).show();
+//                            RatingDialog.getNewInstance(activity, builder).show();
                         }
                     });
                     break;
@@ -105,7 +110,7 @@ public class TimeOnlyBuilder implements IBuilderFunctions
                         @Override
                         public void showRatingDialog()
                         {
-                            RatingDialog.getNewInstance(activity, builder).show();
+//                            RatingDialog.getNewInstance(activity, builder).show();
                         }
                     });
                     break;

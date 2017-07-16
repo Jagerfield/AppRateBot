@@ -9,14 +9,13 @@ import android.view.Window;
 import ratemyapp.jagerfield.appratebotlib.R;
 import ratemyapp.jagerfield.appratebotlib.builders.RatingDialogPresenter;
 import ratemyapp.jagerfield.appratebotlib.builders.UsageMonitor;
-import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnlyBuilder;
-import ratemyapp.jagerfield.appratebotlib.builders.usage_and_time.UsageAndTimeBuilder;
+import ratemyapp.jagerfield.appratebotlib.builders.usage_and_time.RatingsBuilder;
 
 public class RatingDialog extends AppCompatDialog
 {
     private final Context context;
-    private TimeOnlyBuilder timeBuilder;
-    private UsageAndTimeBuilder usageAndTimeBuilder;
+//    private TimeOnlyBuilder timeBuilder;
+    private RatingsBuilder ratingsBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -27,51 +26,50 @@ public class RatingDialog extends AppCompatDialog
         setCancelable(false);
         setContentView(R.layout.ratings_dialog);
 
-        if (timeBuilder != null)
+//        if (timeBuilder != null)
+//        {
+//            RatingDialogPresenter.getNewInstace(this, timeBuilder.getTitle(), timeBuilder.getDescription(), timeBuilder.getIcon());
+//        }
+        if (ratingsBuilder != null)
         {
-            RatingDialogPresenter.getNewInstace(this, timeBuilder.getTitle(), timeBuilder.getDescription(), timeBuilder.getIcon());
+            RatingDialogPresenter.getNewInstace(this, ratingsBuilder.getTitle(), ratingsBuilder.getDescription(), ratingsBuilder.getIcon());
         }
-        else if (usageAndTimeBuilder != null)
-        {
-            RatingDialogPresenter.getNewInstace(this, usageAndTimeBuilder.getTitle(), usageAndTimeBuilder.getDescription(), usageAndTimeBuilder.getIcon());
-        }
-
     }
 
-    private RatingDialog(Context context, TimeOnlyBuilder timeBuilder)
+//    private RatingDialog(Context context, TimeOnlyBuilder timeBuilder)
+//    {
+//        super(context);
+//        this.context = context;
+//        this.timeBuilder = timeBuilder;
+//    }
+
+    private RatingDialog(Context context, RatingsBuilder ratingsBuilder)
     {
         super(context);
         this.context = context;
-        this.timeBuilder = timeBuilder;
+        this.ratingsBuilder = ratingsBuilder;
     }
 
-    private RatingDialog(Context context, UsageAndTimeBuilder usageAndTimeBuilder)
-    {
-        super(context);
-        this.context = context;
-        this.usageAndTimeBuilder = usageAndTimeBuilder;
-    }
+//    public static RatingDialog getNewInstance(Context context, TimeOnlyBuilder builder)
+//    {
+//        return new RatingDialog(context, builder);
+//    }
 
-    public static RatingDialog getNewInstance(Context context, TimeOnlyBuilder builder)
+    public static RatingDialog getNewInstance(Context context, RatingsBuilder builder)
     {
         return new RatingDialog(context, builder);
     }
 
-    public static RatingDialog getNewInstance(Context context, UsageAndTimeBuilder builder)
-    {
-        return new RatingDialog(context, builder);
-    }
+//    public static TimeOnlyBuilder timeOnlyBuilder(Activity activity)
+//    {
+//        usageCounter(activity);
+//        return TimeOnlyBuilder.getNewInstance(activity);
+//    }
 
-    public static TimeOnlyBuilder timeOnlyBuilder(Activity activity)
+    public static RatingsBuilder usageAndTimeBuilder(Activity activity)
     {
         usageCounter(activity);
-        return TimeOnlyBuilder.getNewInstance(activity);
-    }
-
-    public static UsageAndTimeBuilder usageAndTimeBuilder(Activity activity, int usageMaxCount)
-    {
-        usageCounter(activity);
-        return UsageAndTimeBuilder.getNewInstance(activity, usageMaxCount);
+        return RatingsBuilder.getNewInstance(activity);
     }
 
     private static void usageCounter(Context context)
