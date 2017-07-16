@@ -7,7 +7,7 @@ import ratemyapp.jagerfield.appratebotlib.Utils.CLib;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
 import ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum;
 import ratemyapp.jagerfield.appratebotlib.builders.IBuilderFunctions;
-import ratemyapp.jagerfield.appratebotlib.builders.BuilderHelper;
+import ratemyapp.jagerfield.appratebotlib.builders.ShowRatingsDialogHelper;
 import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnlyBuilder;
 import ratemyapp.jagerfield.appratebotlib.dialog.RatingDialog;
 
@@ -18,10 +18,10 @@ public class UsageAndTimeBuilder implements IBuilderFunctions
     private final Activity activity;
     private String title;
     private String description;
-    private int icon = -1000;
+    private int icon = 0;
     private TimeUnit timeUnit;
-    private int timePeriod = -1000;
-    private BuilderHelper builderHelper;
+    private int timePeriod = 0;
+    private ShowRatingsDialogHelper showRatingsDialogHelper;
 
     private static UsageAndTimeBuilder instance;
 
@@ -31,8 +31,8 @@ public class UsageAndTimeBuilder implements IBuilderFunctions
         this.activity = activity;
         this.context = activity.getApplicationContext();
 
-        builderHelper = BuilderHelper.getNewInstance(context);
-//        builderHelper.updateUsageCountAndDate();//Increase count if the app was last used a day ago
+        showRatingsDialogHelper = ShowRatingsDialogHelper.getNewInstance(context);
+//        showRatingsDialogHelper.updateUsageCountAndDate();//Increase count if the app was last used a day ago
     }
 
     public static UsageAndTimeBuilder getNewInstance(Activity activity, int usageCount)
@@ -87,21 +87,18 @@ public class UsageAndTimeBuilder implements IBuilderFunctions
         try
         {
             //Check usage count
-            int usageCount = PreferenceUtil.getInt(context, CLib.IKEYS.KEY_USAGE_COUNT, -9);
+            int usageCount = PreferenceUtil.getInt(context, CLib.IKEYS.KEY_USAGE_COUNT, 0);
 
-            if (usageCount <= usageMaxCount)
-            {
-                throw new IllegalStateException("Usage not enough is null");
-            }
+            if (usageCount <= usageMaxCount) { throw new IllegalStateException("Usage not enough is null"); }
 
-            checkUp();
+            checkParamerters();
             RatingStatusEnum ratingStatus;
-            ratingStatus = builderHelper.getRatingStatus();
+            ratingStatus = showRatingsDialogHelper.getRatingStatus();
 
             switch (ratingStatus)
             {
                 case NOT_ASKED:
-                    builderHelper.isItOkToAskForFirstTime(activity, timeUnit, timePeriod, new TimeOnlyBuilder.ICallback() {
+                    showRatingsDialogHelper.isItOkToAskForFirstTime(activity, timeUnit, timePeriod, new TimeOnlyBuilder.ICallback() {
                         @Override
                         public void showRatingDialog()
                         {
@@ -112,7 +109,7 @@ public class UsageAndTimeBuilder implements IBuilderFunctions
                 case NEVER:
                     break;
                 case LATER:
-                    builderHelper.isItTimeToAskAgain(activity, timeUnit, timePeriod, new TimeOnlyBuilder.ICallback() {
+                    showRatingsDialogHelper.isItTimeToAskAgain(activity, timeUnit, timePeriod, new TimeOnlyBuilder.ICallback() {
                         @Override
                         public void showRatingDialog()
                         {
@@ -129,7 +126,7 @@ public class UsageAndTimeBuilder implements IBuilderFunctions
         }
     }
 
-    private void checkUp() throws Exception
+    private void checkParamerters() throws Exception
     {
         if (activity == null)
         {

@@ -1,7 +1,10 @@
 package ratemyapp.jagerfield.appratebotlib.builders;
 
 import android.content.Context;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 import ratemyapp.jagerfield.appratebotlib.Utils.CLib;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
@@ -136,6 +139,16 @@ public class UsageMonitor
         int minutesLastUsageCal = lastUsageCal.get(Calendar.MINUTE);
         int secondsLastUsageCal = lastUsageCal.get(Calendar.SECOND);
         int milliSecLastUsageCal = lastUsageCal.get(Calendar.MILLISECOND);
+    }
+
+    private String getDate(long time)
+    {
+        Date date = new Date(time);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        sdf.setTimeZone(TimeZone.getDefault());
+//        sdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
+
+        return sdf.format(date);
     }
 }
 

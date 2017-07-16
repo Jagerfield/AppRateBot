@@ -5,25 +5,22 @@ import android.content.Context;
 import android.os.SystemClock;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 import ratemyapp.jagerfield.appratebotlib.Utils.CLib;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
 import ratemyapp.jagerfield.appratebotlib.builders.time_only.TimeOnlyBuilder;
 
-
-public class BuilderHelper
+public class ShowRatingsDialogHelper
 {
-    private BuilderHelper(Context context)
+    private ShowRatingsDialogHelper(Context context)
     {
         this.context = context;
     }
 
-    public static BuilderHelper getNewInstance(Context context)
+    public static ShowRatingsDialogHelper getNewInstance(Context context)
     {
-        return new BuilderHelper(context);
+        return new ShowRatingsDialogHelper(context);
     }
 
     public Context context;
@@ -32,10 +29,7 @@ public class BuilderHelper
     {
         int result;
 
-        if (CLib.sysIsBroken(context))
-        {
-            throw new IllegalArgumentException("Context is null");
-        }
+        if (CLib.sysIsBroken(context)) { throw new IllegalArgumentException("Context is null"); }
 
         result = PreferenceUtil.getInt(context, CLib.IKEYS.KEY_RATINGS_STATE, -9);
 
@@ -63,7 +57,7 @@ public class BuilderHelper
     {
         long askMeLaterDate = PreferenceUtil.getLong(context, CLib.IKEYS.KEY_ASK_AGAIN_DATE, 0l);
 
-        if (askMeLaterDate == 0 )
+        if (askMeLaterDate == 0)
         {
             PreferenceUtil.setInt(context, CLib.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
             throw new IllegalStateException("Can't get askMeLaterDate");
@@ -74,14 +68,16 @@ public class BuilderHelper
 
     private long getTimePeriod(TimeUnit timeUnit, int timeAmount)
     {
+        if (timeUnit==null || timeAmount <=0){ return 0; }
+
         long period = 0l;
         switch (timeUnit)
         {
-            case DAYS:
-                period = TimeUnit.DAYS.toMillis(timeAmount);
-                break;
             case HOURS:
                 period = TimeUnit.HOURS.toMillis(timeAmount);
+                break;
+            case DAYS:
+                period = TimeUnit.DAYS.toMillis(timeAmount);
                 break;
             case MINUTES:
                 period = TimeUnit.MINUTES.toMillis(timeAmount);
@@ -89,12 +85,18 @@ public class BuilderHelper
             case SECONDS:
                 period = TimeUnit.SECONDS.toMillis(timeAmount);
                 break;
+            case MILLISECONDS:
+                period = timeAmount;
+                break;
+            default:
+                period = 0;
+                break;
         }
 
         return period;
     }
 
-    public boolean isItOkToAskForFirstTime(Activity activity, TimeUnit timeUnit, int timeAmount, TimeOnlyBuilder.ICallback client)
+    public boolean isItOkToAskForFirstTime(Activity activity, TimeUnit timeUnit, int timeAmount, TimeOnlyBuilder.ICallback client) throws Exception
     {
         boolean result = false;
         long currentDate = 0l;
@@ -102,40 +104,18 @@ public class BuilderHelper
         long timeSiceInstallation = 0l;
         long periodCriteria = getTimePeriod(timeUnit, timeAmount);
 
-        try
+        currentDate = Calendar.getInstance().getTimeInMillis();
+        installationDate = getAppInstallationDate();
+        timeSiceInstallation = installationDate + periodCriteria;
+
+        if (periodCriteria == 0) {  throw new IllegalStateException("periodCriteria is 0");  }
+        if (client == null) { throw new IllegalStateException("client is null");  }
+        if (installationDate == 0) { throw new IllegalArgumentException("installationDate = 0"); }
+
+        if (currentDate > timeSiceInstallation)
         {
-            if (client == null)
-            {
-                throw new IllegalStateException("client is null");
-            }
-
-            currentDate = System.currentTimeMillis();
-            installationDate = getAppInstallationDate();
-            timeSiceInstallation = installationDate + periodCriteria;
-
-            if (installationDate == 0)
-            {
-                throw new IllegalArgumentException("installationDate = 0");
-            }
-
-            if (currentDate > timeSiceInstallation)
-            {
-                result = true;
-
-                /**
-                 *  Show message on Activity
-                 *
-                 *
-                 *
-                 *
-                 */
-                client.showRatingDialog();
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            result = false;
+            result = true;
+            client.showRatingDialog(); //Call back
         }
 
        return result;
@@ -151,21 +131,13 @@ public class BuilderHelper
 
         try
         {
-            currentDate = SystemClock.uptimeMillis();
+            currentDate = Calendar.getInstance().getTimeInMillis();
             askMeAgainDate = getAskMeLaterDate();
-
-
-            if (client == null)
-            {
-                throw new IllegalStateException("client is null");
-            }
-
-            if (askMeAgainDate==0)
-            {
-                throw new IllegalStateException("askMeAgainDate is 0");
-            }
-
             timeSinceInstallation = askMeAgainDate + periodCriteria;
+
+            if (client == null) { throw new IllegalStateException("client is null"); }
+            if (askMeAgainDate==0) { throw new IllegalStateException("askMeAgainDate is 0"); }
+            if (timeSinceInstallation == 0) { throw new IllegalArgumentException("installationDate = 0"); }
 
             if (currentDate > timeSinceInstallation)
             {
@@ -188,29 +160,6 @@ public class BuilderHelper
         }
 
         return result;
-    }
-
-    private String getDate(long time)
-    {
-        Date date = new Date(time);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        sdf.setTimeZone(TimeZone.getDefault());
-//        sdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
-
-        return sdf.format(date);
-    }
-
-    public long getAppUsageCount() throws Exception
-    {
-        long usageCount = PreferenceUtil.getLong(context, CLib.IKEYS.KEY_USAGE_COUNT, -9l);
-
-        if (usageCount == -9 )
-        {
-            usageCount = 1l;
-            PreferenceUtil.setLong(context, CLib.IKEYS.KEY_USAGE_COUNT, usageCount);
-        }
-
-        return usageCount;
     }
 
 }

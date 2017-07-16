@@ -5,7 +5,7 @@ import android.content.Context;
 
 import java.util.concurrent.TimeUnit;
 
-import ratemyapp.jagerfield.appratebotlib.builders.BuilderHelper;
+import ratemyapp.jagerfield.appratebotlib.builders.ShowRatingsDialogHelper;
 import ratemyapp.jagerfield.appratebotlib.builders.IBuilderFunctions;
 import ratemyapp.jagerfield.appratebotlib.builders.RatingStatusEnum;
 import ratemyapp.jagerfield.appratebotlib.dialog.RatingDialog;
@@ -78,16 +78,19 @@ public class TimeOnlyBuilder implements IBuilderFunctions
 
         try
         {
-            checkUp();
+            checkParameters();
 
-            final BuilderHelper executor = BuilderHelper.getNewInstance(context);
+            final ShowRatingsDialogHelper RatingsHelper = ShowRatingsDialogHelper.getNewInstance(context);
             RatingStatusEnum ratingStatus;
-            ratingStatus = executor.getRatingStatus();
+            ratingStatus = RatingsHelper.getRatingStatus();
+
+            if (ratingStatus==null) {  throw new IllegalStateException("ratingStatus is null");  }
 
             switch (ratingStatus)
             {
                 case NOT_ASKED:
-                    executor.isItOkToAskForFirstTime(activity, timeUnit, timePeriod, new ICallback() {
+                    RatingsHelper.isItOkToAskForFirstTime(activity, timeUnit, timePeriod, new ICallback()
+                    {
                         @Override
                         public void showRatingDialog()
                         {
@@ -98,7 +101,7 @@ public class TimeOnlyBuilder implements IBuilderFunctions
                 case NEVER:
                     break;
                 case LATER:
-                    executor.isItTimeToAskAgain(activity, timeUnit, timePeriod, new ICallback() {
+                    RatingsHelper.isItTimeToAskAgain(activity, timeUnit, timePeriod, new ICallback() {
                         @Override
                         public void showRatingDialog()
                         {
@@ -115,7 +118,7 @@ public class TimeOnlyBuilder implements IBuilderFunctions
         }
     }
 
-    public void checkUp() throws Exception
+    public void checkParameters() throws Exception
     {
         if (activity == null)
         {
