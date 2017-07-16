@@ -9,12 +9,11 @@ import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
 public class UsageMonitor
 {
     private Context context;
-
     private static UsageMonitor instance;
-
     private UsageMonitor(Context context)
     {
         this.context = context;
+        checkPreferencesLastUsageDate(context);
     }
 
     public static UsageMonitor newInstance(Context context)
@@ -61,8 +60,6 @@ public class UsageMonitor
             //Update last usage date
             PreferenceUtil.setLong(context, CLib.IKEYS.KEY_LAST_USAGE_DATE, getCurrentCal().getTimeInMillis());
         }
-
-        String days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
     }
 
     public void updateUsageInformation(Calendar calA, Calendar calB)
@@ -77,67 +74,55 @@ public class UsageMonitor
             //Update last usage date
             PreferenceUtil.setLong(context, CLib.IKEYS.KEY_LAST_USAGE_DATE, getCurrentCal().getTimeInMillis());
         }
-        else
-        {
-            String str = "";
-        }
-
-        String days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
     }
-
 
     public Calendar getLastUsageCal(Context context)
     {
         Calendar lastCal = getCurrentCal();
 
         long lastSavedDate = PreferenceUtil.getLong(context, CLib.IKEYS.KEY_LAST_USAGE_DATE, 0l);
-
-        if (lastSavedDate==0) { resetUsageAndDate(context); }
-
         lastCal.setTimeInMillis(lastSavedDate);
         lastCal = customizeCal(lastCal);
 
         return lastCal;
     }
 
-    public static Calendar getCurrentCal()
+    public Calendar getCurrentCal()
     {
         Calendar cal = Calendar.getInstance();
         cal = customizeCal(cal);
         return cal;
     }
 
-    public static Calendar customizeCal(Calendar cal)
+    public Calendar customizeCal(Calendar cal)
     {
         cal.setTimeZone(TimeZone.getDefault());
         cal.set(Calendar.HOUR_OF_DAY, 0);cal.set(Calendar.MINUTE, 0);cal.set(Calendar.SECOND, 0);cal.set(Calendar.MILLISECOND, 0);
         return cal;
     }
 
-    public static void resetUsageAndDate(Context context)
+    public void resetUsageAndDate(Context context)
     {
         Calendar cal = getCurrentCal();
 
-//        cal.set(Calendar.YEAR, 1970);
-//        cal.set(Calendar.MONTH, 1);
-//        cal.set(Calendar.DAY_OF_WEEK, 1);
-//        cal.set(Calendar.HOUR_OF_DAY, 0);
-//        cal.set(Calendar.MINUTE, 0);
-//        cal.set(Calendar.SECOND, 0);
-//        cal.set(Calendar.MILLISECOND, 0);
-
-        cal.set(Calendar.YEAR, 2017);
-        cal.set(Calendar.MONTH, 6);
-        cal.set(Calendar.DAY_OF_MONTH, 15);
+        cal.set(Calendar.YEAR, 1970);
+        cal.set(Calendar.MONTH, 1);
+        cal.set(Calendar.DAY_OF_WEEK, 1);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
 
-        long lastSavedDate= cal.getTimeInMillis();
+        long lastUsageDate= cal.getTimeInMillis();
 
-        PreferenceUtil.setLong(context, CLib.IKEYS.KEY_LAST_USAGE_DATE, lastSavedDate);
+        PreferenceUtil.setLong(context, CLib.IKEYS.KEY_LAST_USAGE_DATE, lastUsageDate);
         PreferenceUtil.setInt(context, CLib.IKEYS.KEY_USAGE_COUNT, 0);
+    }
+
+    public void checkPreferencesLastUsageDate(Context context)
+    {
+        long lastSavedDate = PreferenceUtil.getLong(context, CLib.IKEYS.KEY_LAST_USAGE_DATE, 0l);
+        if (lastSavedDate==0) { resetUsageAndDate(context); }
     }
 }
 
