@@ -7,8 +7,8 @@ public interface IBuilderFunctions
     IBuilderFunctions setTitle(String title);
     IBuilderFunctions setDescription(String description);
     IBuilderFunctions setIcon(int icon);
-    IBuilderFunctions setActivationTime(TimeUnit timeUnit, int timeAmount);
-    IBuilderFunctions setActivationTimeAndUsageCount(TimeUnit timeUnit, int timeAmount, int usagewCount);
+    IBuilderFunctions setUsageCountPeriodSeparation(long mSeconds);
+    IBuilderFunctions setActivationTimeAndUsageCount(TimeUnit timeUnit, long timeAmount, int usagewCount);
     void build();
 }
 

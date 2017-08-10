@@ -41,7 +41,7 @@ public class RatingDialog extends AppCompatDialog
         return new RatingDialog(context, builder);
     }
 
-    public static RatingsBuilder usageAndTimeBuilder(Activity activity)
+    public static RatingsBuilder startRateBuilder(Activity activity)
     {
         usageCounter(activity);
         return RatingsBuilder.getNewInstance(activity);
@@ -49,11 +49,11 @@ public class RatingDialog extends AppCompatDialog
 
     private static void usageCounter(Context context)
     {
-//        UsageMonitor.resetUsageAndDate(context);
+//        UsageManager.resetUsageAndDate(context);
         /**
-         * Check if the usage count should be incremented
+         * Check if the usage count should be incremented, this requires 24 hiours between usages.
          */
-        UsageMonitor.newInstance(context).updateUsageInformation();
+        UsageManager.newInstance(context).updateAppUsageCount(0l);
     }
 
 

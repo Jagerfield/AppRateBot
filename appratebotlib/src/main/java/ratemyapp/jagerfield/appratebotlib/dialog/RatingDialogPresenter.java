@@ -10,9 +10,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.util.Calendar;
+
 import ratemyapp.jagerfield.appratebotlib.R;
-import ratemyapp.jagerfield.appratebotlib.Utils.CLib;
+import ratemyapp.jagerfield.appratebotlib.Utils.RateLibUtil;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
 import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingStatusEnum;
 
@@ -52,7 +52,9 @@ public class RatingDialogPresenter
         descriptionRatingDlg.setText(description);
 
         ImageView iconRatingDlg = (ImageView) appCompatDialog.findViewById(R.id.iconRatingDlg);
-        iconRatingDlg.setImageDrawable(ContextCompat.getDrawable(appCompatDialog.getContext(), icon));
+        if (icon > 0) {
+            iconRatingDlg.setImageDrawable(ContextCompat.getDrawable(appCompatDialog.getContext(), icon));
+        }
 
         TextView okRatingBt = (TextView) appCompatDialog.findViewById(R.id.okRatingBt);
         okRatingBt.setOnClickListener(new View.OnClickListener() {
@@ -60,7 +62,7 @@ public class RatingDialogPresenter
             public void onClick(View view) {
 
                 launchMarket();
-                PreferenceUtil.setInt(appCompatDialog.getContext(), CLib.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
+                PreferenceUtil.setInt(appCompatDialog.getContext(), RateLibUtil.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
                 appCompatDialog.dismiss();
             }
         });
@@ -70,7 +72,7 @@ public class RatingDialogPresenter
             @Override
             public void onClick(View view) {
 
-                PreferenceUtil.setInt(appCompatDialog.getContext(), CLib.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
+                PreferenceUtil.setInt(appCompatDialog.getContext(), RateLibUtil.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
                 appCompatDialog.dismiss();
             }
         });
@@ -81,9 +83,9 @@ public class RatingDialogPresenter
             @Override
             public void onClick(View view) {
 
-                PreferenceUtil.setInt(appCompatDialog.getContext(), CLib.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.LATER));
-                PreferenceUtil.setInt(appCompatDialog.getContext(), CLib.IKEYS.KEY_USAGE_COUNT, 0);
-                PreferenceUtil.setLong(appCompatDialog.getContext(), CLib.IKEYS.KEY_ASK_AGAIN_DATE, UsageMonitor.getCurrentCal().getTimeInMillis());
+                PreferenceUtil.setInt(appCompatDialog.getContext(), RateLibUtil.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.LATER));
+                PreferenceUtil.setInt(appCompatDialog.getContext(), RateLibUtil.IKEYS.KEY_USAGE_COUNT, 0);
+                PreferenceUtil.setLong(appCompatDialog.getContext(), RateLibUtil.IKEYS.KEY_ASK_AGAIN_DATE, UsageManager.getCurrentCal().getTimeInMillis());
                 appCompatDialog.dismiss();
             }
         });

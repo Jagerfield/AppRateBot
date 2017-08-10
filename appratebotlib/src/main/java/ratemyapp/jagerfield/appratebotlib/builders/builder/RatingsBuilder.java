@@ -2,36 +2,44 @@ package ratemyapp.jagerfield.appratebotlib.builders.builder;
 
 import android.app.Activity;
 import android.content.Context;
+
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
-import ratemyapp.jagerfield.appratebotlib.Utils.CLib;
+import ratemyapp.jagerfield.appratebotlib.Utils.RateLibUtil;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
 import ratemyapp.jagerfield.appratebotlib.dialog.RatingDialog;
 
 public class RatingsBuilder implements IBuilderFunctions
 {
-    private int usageMaxCount;
+    private int activationUsageCount;
     private final Context context;
     private final Activity activity;
     private String title;
     private String description;
     private int icon = 0;
-    private TimeUnit timeUnit;
-    private int timePeriod = 0;
-    private RatingsBuilderHelper ratingsBuilderHelper;
-    private static RatingsBuilder instance;
+    private TimeUnit timeUnit = TimeUnit.MILLISECONDS;
+    long activationTime = 0;
     private BuilderTypeEnum builderType;
+    private long timeBetweenUsages = 0;
+    private static RatingsBuilder instance;
 
     public RatingsBuilder(Activity activity)
     {
         this.activity = activity;
         this.context = activity.getApplicationContext();
-        ratingsBuilderHelper = RatingsBuilderHelper.getNewInstance(context);
     }
 
     public static RatingsBuilder getNewInstance(Activity activity)
     {
         return new RatingsBuilder(activity);
     }
+
+
+    /**
+     *  Build Functions :  getTitle  -  setDescription  -  setIcon  -  setUsageCountPeriodSeparation
+     *                     setActivationTimeAndUsageCount  -  build
+     *
+     * ********************************************************************************************/
 
     public String getTitle() {
         return title;
@@ -43,18 +51,10 @@ public class RatingsBuilder implements IBuilderFunctions
         return this;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     @Override
     public IBuilderFunctions setDescription(String description) {
         this.description = description;
         return this;
-    }
-
-    public int getIcon() {
-        return icon;
     }
 
     @Override
@@ -64,20 +64,18 @@ public class RatingsBuilder implements IBuilderFunctions
     }
 
     @Override
-    public IBuilderFunctions setActivationTime(TimeUnit timeUnit, int timeAmount)
+    public IBuilderFunctions setUsageCountPeriodSeparation(long mSeconds)
     {
-        this.builderType = BuilderTypeEnum.TIME_ONLY;
-        this.timePeriod = timeAmount;
-        this.timeUnit = timeUnit;
-        return this;
+        this.timeBetweenUsages = mSeconds;
+        return null;
     }
 
     @Override
-    public IBuilderFunctions setActivationTimeAndUsageCount(TimeUnit timeUnit, int timeAmount, int usageMaxCount)
+    public IBuilderFunctions setActivationTimeAndUsageCount(TimeUnit timeUnit, long activationTime, int activationUsageCount)
     {
         this.builderType = BuilderTypeEnum.TIME_AND_USAGE_COUNT;
-        this.usageMaxCount = usageMaxCount;
-        this.timePeriod = timeAmount;
+        this.activationUsageCount = activationUsageCount;
+        this.activationTime = activationTime;
         this.timeUnit = timeUnit;
         return this;
     }
@@ -91,18 +89,18 @@ public class RatingsBuilder implements IBuilderFunctions
         try
         {
             checkParamerters();
-            RatingStatusEnum ratingStatus = ratingsBuilderHelper.getRatingStatus();
+            RatingStatusEnum ratingStatus = RateLibUtil.newInstance().getRatingStatus(context);
 
             if (builderType == BuilderTypeEnum.TIME_AND_USAGE_COUNT)
             {
-                int usageCount = PreferenceUtil.getInt(context, CLib.IKEYS.KEY_USAGE_COUNT, 0);
-                if (usageCount < usageMaxCount) { throw new IllegalStateException("Usage count is not enough"); }
+                int usageCount = PreferenceUtil.getInt(context, RateLibUtil.IKEYS.KEY_USAGE_COUNT, 0);
+                if (usageCount < activationUsageCount) { throw new IllegalStateException("Usage count is not enough"); }
             }
 
             switch (ratingStatus)
             {
                 case NOT_ASKED:
-                    ratingsBuilderHelper.isItOkToAskForFirstTime(activity, timeUnit, timePeriod, new RatingsBuilder.ICallback() {
+                    isItOkToAskForFirstTime(activity, timeUnit, activationTime, new RatingsBuilder.ICallback() {
                         @Override
                         public void showRatingDialog()
                         {
@@ -113,7 +111,7 @@ public class RatingsBuilder implements IBuilderFunctions
                 case NEVER:
                     break;
                 case LATER:
-                    ratingsBuilderHelper.isItTimeToAskAgain(activity, timeUnit, timePeriod, new RatingsBuilder.ICallback() {
+                    isItTimeToAskAgain(activity, timeUnit, activationTime, new RatingsBuilder.ICallback() {
                         @Override
                         public void showRatingDialog()
                         {
@@ -128,6 +126,19 @@ public class RatingsBuilder implements IBuilderFunctions
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Helper Functions : getDescription  -  getIcon  -  checkParamerters
+     *
+     * ********************************************************************************************/
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getIcon() {
+        return icon;
     }
 
     private void checkParamerters() throws Exception
@@ -149,7 +160,7 @@ public class RatingsBuilder implements IBuilderFunctions
 
         if (timeUnit == null)
         {
-            throw new IllegalStateException("timeUnit is null");
+            timeUnit = TimeUnit.MILLISECONDS;
         }
 
         if (icon <= 0)
@@ -157,11 +168,123 @@ public class RatingsBuilder implements IBuilderFunctions
             throw new IllegalStateException("icon is incorrect");
         }
 
-        if (timePeriod <= 0)
+        if (activationTime <= 0)
         {
-            throw new IllegalStateException("icon is incorrect");
+            activationTime = 0l;
+        }
+
+        if (timeBetweenUsages <= 0)
+        {
+            timeBetweenUsages = 0l;
         }
     }
+
+
+    /**
+     *  Functions :  getTimeActivationPeriod  -  isItOkToAskForFirstTime  -   isItTimeToAskAgain
+     *
+     * ********************************************************************************************/
+
+    private long getTimeActivationPeriod(TimeUnit timeUnit, long timeAmount)
+    {
+        if (timeUnit==null || timeAmount <=0){ return 0; }
+
+        long period = 0l;
+        switch (timeUnit)
+        {
+            case HOURS:
+                period = TimeUnit.HOURS.toMillis(timeAmount);
+                break;
+            case DAYS:
+                period = TimeUnit.DAYS.toMillis(timeAmount);
+                break;
+            case MINUTES:
+                period = TimeUnit.MINUTES.toMillis(timeAmount);
+                break;
+            case SECONDS:
+                period = TimeUnit.SECONDS.toMillis(timeAmount);
+                break;
+            case MILLISECONDS:
+                period = timeAmount;
+                break;
+            default:
+                period = 0;
+                break;
+        }
+
+        return period;
+    }
+
+    public boolean isItOkToAskForFirstTime(Activity activity, TimeUnit timeUnit, long timeAmount, RatingsBuilder.ICallback client) throws Exception
+    {
+        boolean result = false;
+        long currentDate = 0l;
+        long installationDate = 0l;
+        long timeSiceInstallation = 0l;
+        long periodCriteria = getTimeActivationPeriod(timeUnit, timeAmount);
+
+        currentDate = Calendar.getInstance().getTimeInMillis();
+        installationDate = RateLibUtil.newInstance().getAppInstallationDate(context);
+        timeSiceInstallation = installationDate + periodCriteria;
+
+        if (periodCriteria == 0) {  throw new IllegalStateException("periodCriteria is 0");  }
+        if (client == null) { throw new IllegalStateException("client is null");  }
+        if (installationDate == 0) { throw new IllegalArgumentException("installationDate = 0"); }
+
+        if (currentDate > timeSiceInstallation)
+        {
+            result = true;
+            client.showRatingDialog(); //Call back
+        }
+
+        return result;
+    }
+
+    public boolean isItTimeToAskAgain(Activity activity, TimeUnit timeUnit, long timeAmount, RatingsBuilder.ICallback client)
+    {
+        boolean result = false;
+        long currentDate = 0l;
+        long askMeAgainDate = 0l;
+        long timeSinceInstallation = 0l;
+        long periodCriteria = getTimeActivationPeriod(timeUnit, timeAmount);
+
+        try
+        {
+            currentDate = Calendar.getInstance().getTimeInMillis();
+            askMeAgainDate = RateLibUtil.newInstance().getAskMeLaterDate(context);
+            timeSinceInstallation = askMeAgainDate + periodCriteria;
+
+            if (client == null) { throw new IllegalStateException("client is null"); }
+            if (askMeAgainDate==0) { throw new IllegalStateException("askMeAgainDate is 0"); }
+            if (timeSinceInstallation == 0) { throw new IllegalArgumentException("installationDate = 0"); }
+
+            if (currentDate > timeSinceInstallation)
+            {
+                result = true;
+
+                /**
+                 *  Show message on Activity
+                 *
+                 *
+                 *
+                 *
+                 */
+                client.showRatingDialog();
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            result = false;
+        }
+
+        return result;
+    }
+
+    /**
+     * Data Structres :  ICallback   -   BuilderTypeEnum
+     *
+     * ********************************************************************************************/
 
     public interface ICallback
     {
