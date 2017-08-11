@@ -2,7 +2,6 @@ package ratemyapp.jagerfield.appratebotlib.builders.builder;
 
 import android.app.Activity;
 import android.content.Context;
-
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 import ratemyapp.jagerfield.appratebotlib.Utils.RateLibUtil;
@@ -11,19 +10,19 @@ import ratemyapp.jagerfield.appratebotlib.dialog.RatingDialog;
 
 public class RatingsBuilder implements IBuilderFunctions
 {
-    private int activationUsageCount;
-    private final Context context;
-    private final Activity activity;
-    private String title;
-    private String description;
-    private int icon = 0;
-    private TimeUnit timeUnit = TimeUnit.MILLISECONDS;
-    long activationTime = 0;
-    private BuilderTypeEnum builderType;
-    private long timeBetweenUsages = 0;
+    private static int activationUsageCount;
+    private static Context context;
+    private static Activity activity;
+    private static String title;
+    private static String description;
+    private static int icon = 0;
+    private static TimeUnit timeUnit = TimeUnit.MILLISECONDS;
+    private static long activationTime = 0;
+    private static BuilderTypeEnum builderType;
+    private static long timeBetweenUsages = 0;
     private static RatingsBuilder instance;
 
-    public RatingsBuilder(Activity activity)
+    private RatingsBuilder(Activity activity)
     {
         this.activity = activity;
         this.context = activity.getApplicationContext();
@@ -31,9 +30,13 @@ public class RatingsBuilder implements IBuilderFunctions
 
     public static RatingsBuilder getNewInstance(Activity activity)
     {
-        return new RatingsBuilder(activity);
-    }
+        if(instance == null)
+        {
+            instance = new RatingsBuilder(activity);
+        }
 
+        return instance;
+    }
 
     /**
      *  Build Functions :  getTitle  -  setDescription  -  setIcon  -  setUsageCountPeriodSeparation
@@ -67,14 +70,14 @@ public class RatingsBuilder implements IBuilderFunctions
     public IBuilderFunctions setUsageCountPeriodSeparation(long mSeconds)
     {
         this.timeBetweenUsages = mSeconds;
-        return null;
+        return this;
     }
 
     @Override
-    public IBuilderFunctions setActivationTimeAndUsageCount(TimeUnit timeUnit, long activationTime, int activationUsageCount)
+    public IBuilderFunctions setActivationTimeAndUsageCount(TimeUnit timeUnit, long activationTime, int usageCount)
     {
         this.builderType = BuilderTypeEnum.TIME_AND_USAGE_COUNT;
-        this.activationUsageCount = activationUsageCount;
+        this.activationUsageCount = usageCount;
         this.activationTime = activationTime;
         this.timeUnit = timeUnit;
         return this;
@@ -89,7 +92,7 @@ public class RatingsBuilder implements IBuilderFunctions
         try
         {
             checkParamerters();
-            RatingStatusEnum ratingStatus = RateLibUtil.newInstance().getRatingStatus(context);
+            RatingStatusEnum ratingStatus = RateLibUtil.getInstance().getRatingStatus(context);
 
             if (builderType == BuilderTypeEnum.TIME_AND_USAGE_COUNT)
             {
@@ -100,7 +103,7 @@ public class RatingsBuilder implements IBuilderFunctions
             switch (ratingStatus)
             {
                 case NOT_ASKED:
-                    isItOkToAskForFirstTime(activity, timeUnit, activationTime, new RatingsBuilder.ICallback() {
+                    isItOkToAskForFirstTime(timeUnit, activationTime, new RatingsBuilder.ICallback() {
                         @Override
                         public void showRatingDialog()
                         {
@@ -111,7 +114,7 @@ public class RatingsBuilder implements IBuilderFunctions
                 case NEVER:
                     break;
                 case LATER:
-                    isItTimeToAskAgain(activity, timeUnit, activationTime, new RatingsBuilder.ICallback() {
+                    isItTimeToAskAgain(timeUnit, activationTime, new RatingsBuilder.ICallback() {
                         @Override
                         public void showRatingDialog()
                         {
@@ -181,50 +184,20 @@ public class RatingsBuilder implements IBuilderFunctions
 
 
     /**
-     *  Functions :  getTimeActivationPeriod  -  isItOkToAskForFirstTime  -   isItTimeToAskAgain
+     *  Functions :  isItOkToAskForFirstTime  -   isItTimeToAskAgain
      *
      * ********************************************************************************************/
 
-    private long getTimeActivationPeriod(TimeUnit timeUnit, long timeAmount)
-    {
-        if (timeUnit==null || timeAmount <=0){ return 0; }
-
-        long period = 0l;
-        switch (timeUnit)
-        {
-            case HOURS:
-                period = TimeUnit.HOURS.toMillis(timeAmount);
-                break;
-            case DAYS:
-                period = TimeUnit.DAYS.toMillis(timeAmount);
-                break;
-            case MINUTES:
-                period = TimeUnit.MINUTES.toMillis(timeAmount);
-                break;
-            case SECONDS:
-                period = TimeUnit.SECONDS.toMillis(timeAmount);
-                break;
-            case MILLISECONDS:
-                period = timeAmount;
-                break;
-            default:
-                period = 0;
-                break;
-        }
-
-        return period;
-    }
-
-    public boolean isItOkToAskForFirstTime(Activity activity, TimeUnit timeUnit, long timeAmount, RatingsBuilder.ICallback client) throws Exception
+    public boolean isItOkToAskForFirstTime(TimeUnit timeUnit, long timeAmount, RatingsBuilder.ICallback client) throws Exception
     {
         boolean result = false;
         long currentDate = 0l;
         long installationDate = 0l;
         long timeSiceInstallation = 0l;
-        long periodCriteria = getTimeActivationPeriod(timeUnit, timeAmount);
+        long periodCriteria = RateLibUtil.getInstance().getTimeActivationPeriod(timeUnit, timeAmount);
 
         currentDate = Calendar.getInstance().getTimeInMillis();
-        installationDate = RateLibUtil.newInstance().getAppInstallationDate(context);
+        installationDate = RateLibUtil.getInstance().getAppInstallationDate(context);
         timeSiceInstallation = installationDate + periodCriteria;
 
         if (periodCriteria == 0) {  throw new IllegalStateException("periodCriteria is 0");  }
@@ -240,18 +213,18 @@ public class RatingsBuilder implements IBuilderFunctions
         return result;
     }
 
-    public boolean isItTimeToAskAgain(Activity activity, TimeUnit timeUnit, long timeAmount, RatingsBuilder.ICallback client)
+    public boolean isItTimeToAskAgain(TimeUnit timeUnit, long timeAmount, RatingsBuilder.ICallback client)
     {
         boolean result = false;
         long currentDate = 0l;
         long askMeAgainDate = 0l;
         long timeSinceInstallation = 0l;
-        long periodCriteria = getTimeActivationPeriod(timeUnit, timeAmount);
 
         try
         {
+            long periodCriteria = RateLibUtil.getInstance().getTimeActivationPeriod(timeUnit, timeAmount);
             currentDate = Calendar.getInstance().getTimeInMillis();
-            askMeAgainDate = RateLibUtil.newInstance().getAskMeLaterDate(context);
+            askMeAgainDate = RateLibUtil.getInstance().getAskMeLaterDate(context);
             timeSinceInstallation = askMeAgainDate + periodCriteria;
 
             if (client == null) { throw new IllegalStateException("client is null"); }
@@ -280,6 +253,22 @@ public class RatingsBuilder implements IBuilderFunctions
 
         return result;
     }
+
+    /**
+     * Static Functions
+     *
+     * ********************************************************************************************/
+
+    public static TimeUnit getTimeUnit()
+    {
+        return timeUnit;
+    }
+
+    public static long getActivationTime()
+    {
+        return activationTime;
+    }
+
 
     /**
      * Data Structres :  ICallback   -   BuilderTypeEnum

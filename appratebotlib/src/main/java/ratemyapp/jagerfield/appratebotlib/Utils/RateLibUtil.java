@@ -5,12 +5,18 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
+
 import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingStatusEnum;
+import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingsBuilder;
 
 public class RateLibUtil
 {
     private static RateLibUtil instance;
-    public static RateLibUtil newInstance()
+    public static RateLibUtil getInstance()
     {
         if (instance == null)
         {
@@ -20,7 +26,7 @@ public class RateLibUtil
         return instance;
     }
 
-    public RateLibUtil() {
+    private RateLibUtil() {
     }
 
     public static boolean sysIsBroken(Context context)
@@ -80,10 +86,139 @@ public class RateLibUtil
         return RatingStatusEnum.fromIntToEnum(result);
     }
 
-    public int getUsageCount(Context context)
+    public int getUsageCount(Context context) throws Exception
     {
+        if (RateLibUtil.sysIsBroken(context)) { throw new IllegalArgumentException("Context is null"); }
         int count = PreferenceUtil.getInt(context, RateLibUtil.IKEYS.KEY_USAGE_COUNT, 0);
         return count;
+    }
+
+    public String getFormatedCurrentDateString()  throws Exception
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        return format.format(cal.getTime());
+    }
+
+    public String getFormatedLastUsageDateString(Context context) throws Exception
+    {
+        Calendar lastCal = Calendar.getInstance();
+        long lastSavedDate = PreferenceUtil.getLong(context, RateLibUtil.IKEYS.KEY_LAST_USAGE_DATE, 0l);
+        lastCal.setTimeInMillis(lastSavedDate);
+
+        lastCal.setTimeZone(TimeZone.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+        return format.format(lastCal.getTime());
+    }
+
+    public String getAppInstallationDateString(Context context)  throws Exception
+    {
+        Calendar cal = Calendar.getInstance();
+        PackageManager packageManager =  context.getPackageManager();
+        long installTimeInMilliseconds;
+        PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+        installTimeInMilliseconds = packageInfo.firstInstallTime;
+
+        cal.setTimeInMillis(installTimeInMilliseconds);
+        cal.setTimeZone(TimeZone.getDefault());
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String date = format.format(cal.getTime());
+
+        return date;
+    }
+
+    public String getAskMeLaterDateString(Context context)  throws Exception
+    {
+        Calendar cal = Calendar.getInstance();
+        long askMeLaterDate = PreferenceUtil.getLong(context, RateLibUtil.IKEYS.KEY_ASK_AGAIN_DATE, 0l);
+        cal.setTimeInMillis(askMeLaterDate);
+
+        cal.setTimeZone(TimeZone.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+        String date = format.format(cal.getTime());
+        return date;
+    }
+
+    public long getTimeActivationPeriod(TimeUnit timeUnit, long timeAmount)  throws Exception
+    {
+        if (timeUnit==null || timeAmount <=0){ return 0; }
+
+        long period = 0l;
+        switch (timeUnit)
+        {
+            case HOURS:
+                period = TimeUnit.HOURS.toMillis(timeAmount);
+                break;
+            case DAYS:
+                period = TimeUnit.DAYS.toMillis(timeAmount);
+                break;
+            case MINUTES:
+                period = TimeUnit.MINUTES.toMillis(timeAmount);
+                break;
+            case SECONDS:
+                period = TimeUnit.SECONDS.toMillis(timeAmount);
+                break;
+            case MILLISECONDS:
+                period = timeAmount;
+                break;
+            default:
+                period = 0;
+                break;
+        }
+
+        return period;
+    }
+
+
+    /**
+     * Activation time period is set by the user. If Rating status is "Not asked", then the UI will show
+     * time till next activation = Activation time period + date of installation.
+     * Else,
+     * If Rating status is "Ask me later" then the UI will show
+     * time till next activation = Activation time period + date of ask me later.
+     */
+    public String claculateNextActivationDate(Context context) throws Exception
+    {
+        long result = 0;
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+        try
+        {
+            long waitingPeriod = getTimeActivationPeriod(RatingsBuilder.getTimeUnit(), RatingsBuilder.getActivationTime());
+            long appInstallationDate = getAppInstallationDate(context);
+            long askMeLaterDate = getAskMeLaterDate(context);
+
+            RatingStatusEnum ratingStatus = getRatingStatus(context);
+
+            switch (ratingStatus)
+            {
+                case NOT_ASKED:
+                    result = waitingPeriod + appInstallationDate;
+                    break;
+                case NEVER:
+                    break;
+                case LATER:
+                    result = waitingPeriod + askMeLaterDate;
+                    break;
+                default:
+                    throw new Exception("Not an acceptable argument");
+            }
+
+            cal.setTimeInMillis(result);
+            cal.setTimeZone(TimeZone.getDefault());
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            throw new Exception("Function claculateNextActivationDate failed");
+        }
+
+        return format.format(cal.getTime());
     }
 
 }

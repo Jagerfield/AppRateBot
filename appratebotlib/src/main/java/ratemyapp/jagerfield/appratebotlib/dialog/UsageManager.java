@@ -2,6 +2,7 @@ package ratemyapp.jagerfield.appratebotlib.dialog;
 
 import android.content.Context;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 import ratemyapp.jagerfield.appratebotlib.Utils.RateLibUtil;
@@ -35,7 +36,7 @@ public class UsageManager
     public void updateAppUsageCount(long mSecondsInBetween)
     {
         Calendar cal = getCurrentCal();
-        Calendar lastUsageCal = getLastUsageCal(context, mSecondsInBetween);
+        Calendar lastUsageCal = getLastUsageIcludingWaitingPeriodCal(context, mSecondsInBetween);
 
         inspectCalendarsValues(cal, lastUsageCal);
 
@@ -51,7 +52,7 @@ public class UsageManager
         }
     }
 
-    public Calendar getLastUsageCal(Context context, long mSecondsInBetween)
+    public Calendar getLastUsageIcludingWaitingPeriodCal(Context context, long mSecondsInBetween)
     {
         Calendar lastCal = getCurrentCal();
         long lastSavedDate = PreferenceUtil.getLong(context, RateLibUtil.IKEYS.KEY_LAST_USAGE_DATE, 0l);
@@ -125,13 +126,6 @@ public class UsageManager
         int minutesLastUsageCal = lastUsageCal.get(Calendar.MINUTE);
         int secondsLastUsageCal = lastUsageCal.get(Calendar.SECOND);
         int milliSecLastUsageCal = lastUsageCal.get(Calendar.MILLISECOND);
-    }
-
-    public CalendarElements getCurrentDate()
-    {
-        Calendar cal = Calendar.getInstance();
-        cal = customizeCal(cal);
-        return new CalendarElements(cal);
     }
 
     public CalendarElements getUsageDate(Context context)
