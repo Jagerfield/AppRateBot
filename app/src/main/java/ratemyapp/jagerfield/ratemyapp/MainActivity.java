@@ -4,7 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 import java.util.concurrent.TimeUnit;
-import ratemyapp.jagerfield.appratebotlib.Utils.RateLibUtil;
+
+import ratemyapp.jagerfield.appratebotlib.Func.Funcs;
+import ratemyapp.jagerfield.appratebotlib.Utils.C;
 import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingStatusEnum;
 import ratemyapp.jagerfield.appratebotlib.dialog.RatingDialog;
 
@@ -19,7 +21,7 @@ public class MainActivity extends AppCompatActivity
     private TextView activationTimeTv;
     private TextView activationUsageTv;
     private TextView usageCountPeriodSeparationTv;
-    private RateLibUtil util;
+    private Funcs util;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        util = RateLibUtil.getInstance();
+        util = Funcs.getInstance();
 
         RatingStatusEnum type = util.getRatingStatus(getApplicationContext());
 
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity
                     .setDescription("If it has been useful to you\nwould you kindly rate it on GooglePlay")
                     .setIcon(R.mipmap.ic_launcher)
                     .setUsageCountPeriodSeparation(0l)
-                    .setActivationTimeAndUsageCount(TimeUnit.MILLISECONDS, 3600 * 1000, 3)
+                    .setActivationTimeAndUsageCount(TimeUnit.MILLISECONDS, 48 * 3600 * 1000, 8)
                     .build();
         }
 

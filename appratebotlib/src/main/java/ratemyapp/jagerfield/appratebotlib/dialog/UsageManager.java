@@ -2,10 +2,10 @@ package ratemyapp.jagerfield.appratebotlib.dialog;
 
 import android.content.Context;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
-import ratemyapp.jagerfield.appratebotlib.Utils.RateLibUtil;
+
+import ratemyapp.jagerfield.appratebotlib.Utils.C;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
 import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingStatusEnum;
 
@@ -44,18 +44,18 @@ public class UsageManager
 
         if (i>0)
         {
-            int usageCounter = PreferenceUtil.getInt(context, RateLibUtil.IKEYS.KEY_USAGE_COUNT, 0);
+            int usageCounter = PreferenceUtil.getInt(context, C.IKEYS.KEY_USAGE_COUNT, 0);
             //Update usage usageCounter
-            PreferenceUtil.setInt(context, RateLibUtil.IKEYS.KEY_USAGE_COUNT, usageCounter + 1);
+            PreferenceUtil.setInt(context, C.IKEYS.KEY_USAGE_COUNT, usageCounter + 1);
             //Update last usage date
-            PreferenceUtil.setLong(context, RateLibUtil.IKEYS.KEY_LAST_USAGE_DATE, getCurrentCal().getTimeInMillis());
+            PreferenceUtil.setLong(context, C.IKEYS.KEY_LAST_USAGE_DATE, getCurrentCal().getTimeInMillis());
         }
     }
 
     public Calendar getLastUsageIcludingWaitingPeriodCal(Context context, long mSecondsInBetween)
     {
         Calendar lastCal = getCurrentCal();
-        long lastSavedDate = PreferenceUtil.getLong(context, RateLibUtil.IKEYS.KEY_LAST_USAGE_DATE, 0l);
+        long lastSavedDate = PreferenceUtil.getLong(context, C.IKEYS.KEY_LAST_USAGE_DATE, 0l);
         lastCal.setTimeInMillis(lastSavedDate + mSecondsInBetween);
         lastCal = customizeCal(lastCal);
 
@@ -90,14 +90,14 @@ public class UsageManager
 
         long lastUsageDate= cal.getTimeInMillis();
 
-        PreferenceUtil.setLong(context, RateLibUtil.IKEYS.KEY_LAST_USAGE_DATE, lastUsageDate);
-        PreferenceUtil.setInt(context, RateLibUtil.IKEYS.KEY_USAGE_COUNT, 0);
-        PreferenceUtil.setInt(context, RateLibUtil.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NOT_ASKED));
+        PreferenceUtil.setLong(context, C.IKEYS.KEY_LAST_USAGE_DATE, lastUsageDate);
+        PreferenceUtil.setInt(context, C.IKEYS.KEY_USAGE_COUNT, 0);
+        PreferenceUtil.setInt(context, C.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NOT_ASKED));
     }
 
     public void getSavedLastUsageDate()
     {
-        long lastSavedDate = PreferenceUtil.getLong(context, RateLibUtil.IKEYS.KEY_LAST_USAGE_DATE, 0l);
+        long lastSavedDate = PreferenceUtil.getLong(context, C.IKEYS.KEY_LAST_USAGE_DATE, 0l);
         if (lastSavedDate==0) { resetUsageAndDate(); }
     }
 
@@ -131,7 +131,7 @@ public class UsageManager
     public CalendarElements getUsageDate(Context context)
     {
         Calendar lastCal = getCurrentCal();
-        long lastSavedDate = PreferenceUtil.getLong(context, RateLibUtil.IKEYS.KEY_LAST_USAGE_DATE, 0l);
+        long lastSavedDate = PreferenceUtil.getLong(context, C.IKEYS.KEY_LAST_USAGE_DATE, 0l);
         lastCal.setTimeInMillis(lastSavedDate);
         lastCal = customizeCal(lastCal);
 
@@ -206,11 +206,11 @@ public class UsageManager
 //
 //        if (i>0)
 //        {
-//            int count = PreferenceUtil.getInt(context, RateLibUtil.IKEYS.KEY_USAGE_COUNT, 0);
+//            int count = PreferenceUtil.getInt(context, C.IKEYS.KEY_USAGE_COUNT, 0);
 //            //Update usage usageCounter
-//            PreferenceUtil.setInt(context, RateLibUtil.IKEYS.KEY_USAGE_COUNT, count + 1);
+//            PreferenceUtil.setInt(context, C.IKEYS.KEY_USAGE_COUNT, count + 1);
 //            //Update last usage date
-//            PreferenceUtil.setLong(context, RateLibUtil.IKEYS.KEY_LAST_USAGE_DATE, getCurrentCal().getTimeInMillis());
+//            PreferenceUtil.setLong(context, C.IKEYS.KEY_LAST_USAGE_DATE, getCurrentCal().getTimeInMillis());
 //        }
 //    }
 

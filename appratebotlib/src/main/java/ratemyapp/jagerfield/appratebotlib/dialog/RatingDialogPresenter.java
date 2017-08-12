@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ratemyapp.jagerfield.appratebotlib.R;
-import ratemyapp.jagerfield.appratebotlib.Utils.RateLibUtil;
+import ratemyapp.jagerfield.appratebotlib.Utils.C;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
 import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingStatusEnum;
 
@@ -62,7 +62,7 @@ public class RatingDialogPresenter
             public void onClick(View view) {
 
                 launchMarket();
-                PreferenceUtil.setInt(appCompatDialog.getContext(), RateLibUtil.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
+                PreferenceUtil.setInt(appCompatDialog.getContext(), C.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
                 appCompatDialog.dismiss();
             }
         });
@@ -72,7 +72,7 @@ public class RatingDialogPresenter
             @Override
             public void onClick(View view) {
 
-                PreferenceUtil.setInt(appCompatDialog.getContext(), RateLibUtil.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
+                PreferenceUtil.setInt(appCompatDialog.getContext(), C.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
                 appCompatDialog.dismiss();
             }
         });
@@ -83,9 +83,9 @@ public class RatingDialogPresenter
             @Override
             public void onClick(View view) {
 
-                PreferenceUtil.setInt(appCompatDialog.getContext(), RateLibUtil.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.LATER));
-                PreferenceUtil.setInt(appCompatDialog.getContext(), RateLibUtil.IKEYS.KEY_USAGE_COUNT, 0);
-                PreferenceUtil.setLong(appCompatDialog.getContext(), RateLibUtil.IKEYS.KEY_ASK_AGAIN_DATE, UsageManager.getCurrentCal().getTimeInMillis());
+                PreferenceUtil.setInt(appCompatDialog.getContext(), C.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.LATER));
+                PreferenceUtil.setInt(appCompatDialog.getContext(), C.IKEYS.KEY_USAGE_COUNT, 0);
+                PreferenceUtil.setLong(appCompatDialog.getContext(), C.IKEYS.KEY_ASK_AGAIN_DATE, UsageManager.getCurrentCal().getTimeInMillis());
                 appCompatDialog.dismiss();
             }
         });
@@ -94,6 +94,8 @@ public class RatingDialogPresenter
     private void launchMarket() {
         Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=jagerfield.ContentResolverVsCursorLoader");
         Intent myAppLinkToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        myAppLinkToMarket.addCategory(Intent.CATEGORY_BROWSABLE);
+
         try
         {
             context.startActivity(myAppLinkToMarket);

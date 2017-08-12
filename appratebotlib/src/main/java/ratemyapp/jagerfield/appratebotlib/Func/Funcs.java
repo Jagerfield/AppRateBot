@@ -1,51 +1,35 @@
-package ratemyapp.jagerfield.appratebotlib.Utils;
+package ratemyapp.jagerfield.appratebotlib.Func;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.util.Log;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import ratemyapp.jagerfield.appratebotlib.Utils.C;
+import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
 import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingStatusEnum;
 import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingsBuilder;
 
-public class RateLibUtil
+public class Funcs
 {
-    private static RateLibUtil instance;
-    public static RateLibUtil getInstance()
+    private static Funcs instance;
+    public static Funcs getInstance()
     {
         if (instance == null)
         {
-            instance = new RateLibUtil();
+            instance = new Funcs();
         }
 
         return instance;
     }
 
-    private RateLibUtil() {
+    private Funcs() {
     }
 
-    public static boolean sysIsBroken(Context context)
-    {
-        boolean result = false;
-        if (context==null) { Log.e("TAG", "Context is null"); result = true; }
-
-        return result;
-    }
-
-    public interface IKEYS
-    {
-        String KEY_RATINGS_STATE = "KEY_RATINGS_STATE";
-        String KEY_ASK_AGAIN_DATE = "KEY_ASK_AGAIN_DATE";
-        String KEY_USAGE_COUNT = "KEY_USAGE_COUNT";
-        String KEY_LAST_USAGE_DATE = "KEY_LAST_USAGE_DATE"; //Used to know when to update the usage counter
-    }
-
-    public long getAppInstallationDate(Context context) throws Exception
+        public long getAppInstallationDate(Context context) throws Exception
     {
         PackageManager packageManager =  context.getPackageManager();
         long installTimeInMilliseconds;
@@ -58,11 +42,11 @@ public class RateLibUtil
 
     public long getAskMeLaterDate(Context context) throws Exception
     {
-        long askMeLaterDate = PreferenceUtil.getLong(context, RateLibUtil.IKEYS.KEY_ASK_AGAIN_DATE, 0l);
+        long askMeLaterDate = PreferenceUtil.getLong(context, C.IKEYS.KEY_ASK_AGAIN_DATE, 0l);
 
 //        if (askMeLaterDate == 0)
 //        {
-//            PreferenceUtil.setInt(context, RateLibUtil.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
+//            PreferenceUtil.setInt(context, C.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
 //            throw new IllegalStateException("Can't get askMeLaterDate");
 //        }
 
@@ -73,12 +57,12 @@ public class RateLibUtil
     {
         int result;
 
-        result = PreferenceUtil.getInt(context, RateLibUtil.IKEYS.KEY_RATINGS_STATE, -9);
+        result = PreferenceUtil.getInt(context, C.IKEYS.KEY_RATINGS_STATE, -9);
 
         if (result == -9 )
         {
             result = RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NOT_ASKED);
-            PreferenceUtil.setInt(context, RateLibUtil.IKEYS.KEY_RATINGS_STATE, result);
+            PreferenceUtil.setInt(context, C.IKEYS.KEY_RATINGS_STATE, result);
         }
 
         return RatingStatusEnum.fromIntToEnum(result);
@@ -86,8 +70,8 @@ public class RateLibUtil
 
     public int getUsageCount(Context context) throws Exception
     {
-        if (RateLibUtil.sysIsBroken(context)) { throw new IllegalArgumentException("Context is null"); }
-        int count = PreferenceUtil.getInt(context, RateLibUtil.IKEYS.KEY_USAGE_COUNT, 0);
+        if (C.sysIsBroken(context)) { throw new IllegalArgumentException("Context is null"); }
+        int count = PreferenceUtil.getInt(context, C.IKEYS.KEY_USAGE_COUNT, 0);
         return count;
     }
 
@@ -102,7 +86,7 @@ public class RateLibUtil
     public String getFormatedLastUsageDateString(Context context) throws Exception
     {
         Calendar lastCal = Calendar.getInstance();
-        long lastSavedDate = PreferenceUtil.getLong(context, RateLibUtil.IKEYS.KEY_LAST_USAGE_DATE, 0l);
+        long lastSavedDate = PreferenceUtil.getLong(context, C.IKEYS.KEY_LAST_USAGE_DATE, 0l);
         lastCal.setTimeInMillis(lastSavedDate);
 
         lastCal.setTimeZone(TimeZone.getDefault());
@@ -131,7 +115,7 @@ public class RateLibUtil
     public String getAskMeLaterDateString(Context context)  throws Exception
     {
         Calendar cal = Calendar.getInstance();
-        long askMeLaterDate = PreferenceUtil.getLong(context, RateLibUtil.IKEYS.KEY_ASK_AGAIN_DATE, 0l);
+        long askMeLaterDate = PreferenceUtil.getLong(context, C.IKEYS.KEY_ASK_AGAIN_DATE, 0l);
         cal.setTimeInMillis(askMeLaterDate);
 
         cal.setTimeZone(TimeZone.getDefault());
@@ -221,4 +205,86 @@ public class RateLibUtil
         return format.format(cal.getTime());
     }
 
+
+    /**
+     *  Funcs :  isItOkToAskForFirstTime  -   isItTimeToAskAgain
+     *
+     * ********************************************************************************************/
+
+    public boolean isItOkToAskForFirstTime(Context context, TimeUnit timeUnit, long timeAmount, ICallback client) throws Exception
+    {
+        boolean result = false;
+        long currentDate = 0l;
+        long installationDate = 0l;
+        long timeSiceInstallation = 0l;
+        long periodCriteria = Funcs.getInstance().getTimeActivationPeriod(timeUnit, timeAmount);
+
+        currentDate = Calendar.getInstance().getTimeInMillis();
+        installationDate = Funcs.getInstance().getAppInstallationDate(context);
+        timeSiceInstallation = installationDate + periodCriteria;
+
+        if (periodCriteria == 0) {  throw new IllegalStateException("periodCriteria is 0");  }
+        if (client == null) { throw new IllegalStateException("client is null");  }
+        if (installationDate == 0) { throw new IllegalArgumentException("installationDate = 0"); }
+
+        if (currentDate > timeSiceInstallation)
+        {
+            result = true;
+            client.showRatingDialog(); //Call back
+        }
+
+        return result;
+    }
+
+    public boolean isItTimeToAskAgain(Context context, TimeUnit timeUnit, long timeAmount, ICallback client)
+    {
+        boolean result = false;
+        long currentDate = 0l;
+        long askMeAgainDate = 0l;
+        long timeSinceInstallation = 0l;
+
+        try
+        {
+            long periodCriteria = Funcs.getInstance().getTimeActivationPeriod(timeUnit, timeAmount);
+            currentDate = Calendar.getInstance().getTimeInMillis();
+            askMeAgainDate = Funcs.getInstance().getAskMeLaterDate(context);
+            timeSinceInstallation = askMeAgainDate + periodCriteria;
+
+            if (client == null) { throw new IllegalStateException("client is null"); }
+            if (askMeAgainDate==0) { throw new IllegalStateException("askMeAgainDate is 0"); }
+            if (timeSinceInstallation == 0) { throw new IllegalArgumentException("installationDate = 0"); }
+
+            if (currentDate > timeSinceInstallation)
+            {
+                result = true;
+
+                /**
+                 *  Show message on Activity
+                 *
+                 *
+                 *
+                 *
+                 */
+                client.showRatingDialog();
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            result = false;
+        }
+
+        return result;
+    }
+
+
+    /**
+     * Data Structres :  ICallback   -   BuilderTypeEnum
+     *
+     * ********************************************************************************************/
+
+    public interface ICallback
+    {
+        void showRatingDialog();
+    }
 }
