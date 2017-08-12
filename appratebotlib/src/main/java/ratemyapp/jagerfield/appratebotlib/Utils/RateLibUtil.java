@@ -60,20 +60,18 @@ public class RateLibUtil
     {
         long askMeLaterDate = PreferenceUtil.getLong(context, RateLibUtil.IKEYS.KEY_ASK_AGAIN_DATE, 0l);
 
-        if (askMeLaterDate == 0)
-        {
-            PreferenceUtil.setInt(context, RateLibUtil.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
-            throw new IllegalStateException("Can't get askMeLaterDate");
-        }
+//        if (askMeLaterDate == 0)
+//        {
+//            PreferenceUtil.setInt(context, RateLibUtil.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
+//            throw new IllegalStateException("Can't get askMeLaterDate");
+//        }
 
         return askMeLaterDate;
     }
 
-    public RatingStatusEnum getRatingStatus(Context context)  throws Exception
+    public RatingStatusEnum getRatingStatus(Context context)
     {
         int result;
-
-        if (RateLibUtil.sysIsBroken(context)) { throw new IllegalArgumentException("Context is null"); }
 
         result = PreferenceUtil.getInt(context, RateLibUtil.IKEYS.KEY_RATINGS_STATE, -9);
 
@@ -189,20 +187,22 @@ public class RateLibUtil
 
         try
         {
-            long waitingPeriod = getTimeActivationPeriod(RatingsBuilder.getTimeUnit(), RatingsBuilder.getActivationTime());
-            long appInstallationDate = getAppInstallationDate(context);
-            long askMeLaterDate = getAskMeLaterDate(context);
+            TimeUnit timeUnit = RatingsBuilder.getTimeUnit();
+            long activationTime = RatingsBuilder.getActivationTime();
+            long waitingPeriod = getTimeActivationPeriod(timeUnit, activationTime);
 
             RatingStatusEnum ratingStatus = getRatingStatus(context);
 
             switch (ratingStatus)
             {
                 case NOT_ASKED:
+                    long appInstallationDate = getAppInstallationDate(context);
                     result = waitingPeriod + appInstallationDate;
                     break;
                 case NEVER:
                     break;
                 case LATER:
+                    long askMeLaterDate = getAskMeLaterDate(context);
                     result = waitingPeriod + askMeLaterDate;
                     break;
                 default:

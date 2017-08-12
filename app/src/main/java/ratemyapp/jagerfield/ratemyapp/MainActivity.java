@@ -29,25 +29,20 @@ public class MainActivity extends AppCompatActivity
 
         util = RateLibUtil.getInstance();
 
-        try
-        {
-            if (util.getRatingStatus(getApplicationContext()) != RatingStatusEnum.NEVER)
-            {
-                RatingDialog.startRateBuilder(this)
-                        .setTitle("Thanks for using the app")
-                        .setDescription("If it has been useful to you\nwould you kindly rate it on GooglePlay")
-                        .setIcon(R.mipmap.ic_launcher)
-                        .setUsageCountPeriodSeparation(0l)
-                        .setActivationTimeAndUsageCount(TimeUnit.MILLISECONDS, 3600, 3)
-                        .build();
-            }
+        RatingStatusEnum type = util.getRatingStatus(getApplicationContext());
 
-            initializeUIComponents();
-        }
-        catch (Exception e)
+        if (type != RatingStatusEnum.NEVER)
         {
-            e.printStackTrace();
+            RatingDialog.startRateBuilder(this)
+                    .setTitle("Thanks for using the app")
+                    .setDescription("If it has been useful to you\nwould you kindly rate it on GooglePlay")
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setUsageCountPeriodSeparation(0l)
+                    .setActivationTimeAndUsageCount(TimeUnit.MILLISECONDS, 3600 * 1000, 3)
+                    .build();
         }
+
+        initializeUIComponents();
     }
 
     private void initializeUIComponents()

@@ -74,12 +74,12 @@ public class RatingsBuilder implements IBuilderFunctions
     }
 
     @Override
-    public IBuilderFunctions setActivationTimeAndUsageCount(TimeUnit timeUnit, long activationTime, int usageCount)
+    public IBuilderFunctions setActivationTimeAndUsageCount(TimeUnit timeUnit_, long activationTime_, int usageCount_)
     {
-        this.builderType = BuilderTypeEnum.TIME_AND_USAGE_COUNT;
-        this.activationUsageCount = usageCount;
-        this.activationTime = activationTime;
-        this.timeUnit = timeUnit;
+        builderType = BuilderTypeEnum.TIME_AND_USAGE_COUNT;
+        activationUsageCount = usageCount_;
+        activationTime = activationTime_;
+        timeUnit = timeUnit_;
         return this;
     }
 
@@ -266,6 +266,7 @@ public class RatingsBuilder implements IBuilderFunctions
 
     public static long getActivationTime()
     {
+        long l = activationTime;
         return activationTime;
     }
 
