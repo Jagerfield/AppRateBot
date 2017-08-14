@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="RatingBarStyle" parent="Theme.AppCompat">
-        <item name="colorControlNormal">@color/duskYellow</item>
-        <item name="colorControlActivated">@color/grey_200</item>
-    </style>
+    <!--<style name="RatingBarStyle" parent="Theme.AppCompat">-->
+        <!--<item name="colorControlNormal">@color/duskYellow</item>-->
+        <!--<item name="colorControlActivated">@color/grey_200</item>-->
+    <!--</style>-->
 
-
-    <style name="TextViewClickableButton" parent="Base.V7.Widget.AppCompat.AutoCompleteTextView">
+    <style name="ClickableTextViewButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
@@ -17,6 +16,47 @@
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textColor">@color/green_dark</item>
         <item name="android:textSize">@dimen/text_size_button_rating</item>
+    </style>
+
+    <style name="MainTitlesTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/greytext</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TitlesTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/greytextII</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="DatesTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/menublue</item>
+        <item name="android:text">00:00:00</item>
+    </style>
+
+    <style name="TimesTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/green_dark</item>
+        <item name="android:text">00:00:00</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
+
+    <style name="CountersTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/purple</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:text">0</item>
     </style>
 
 </resources>

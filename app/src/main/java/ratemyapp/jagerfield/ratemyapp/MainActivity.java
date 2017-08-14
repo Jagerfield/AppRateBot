@@ -6,19 +6,24 @@ import android.widget.TextView;
 import java.util.concurrent.TimeUnit;
 
 import ratemyapp.jagerfield.appratebotlib.Func.Funcs;
-import ratemyapp.jagerfield.appratebotlib.Utils.C;
 import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingStatusEnum;
 import ratemyapp.jagerfield.appratebotlib.dialog.RatingDialog;
 
 public class MainActivity extends AppCompatActivity
 {
+    private TextView currentDateTv;
     private TextView currentTimeTv;
     private TextView appInstallationDateTv;
-    private TextView usageCountTv;
-    private TextView lastUsageDateTv;
-    private TextView ratingStatusTv;
+    private TextView appInstallationTimeTv;
     private TextView askMeLaterDateTv;
-    private TextView activationTimeTv;
+    private TextView askMeLaterTimeTv;
+    private TextView nextActivationDateTv;
+    private TextView nextActivationTimeTv;
+    private TextView lastUsageDateTv;
+    private TextView lastUsageTimeTv;
+
+    private TextView usageCountTv;
+    private TextView ratingStatusTv;
     private TextView activationUsageTv;
     private TextView usageCountPeriodSeparationTv;
     private Funcs util;
@@ -49,36 +54,51 @@ public class MainActivity extends AppCompatActivity
 
     private void initializeUIComponents()
     {
+        currentDateTv = (TextView) findViewById(R.id.currentDateTv);
         currentTimeTv = (TextView) findViewById(R.id.currentTimeTv);
         appInstallationDateTv = (TextView) findViewById(R.id.appInstallationDateTv);
-        usageCountTv = (TextView) findViewById(R.id.usageCountTv);
-        lastUsageDateTv = (TextView) findViewById(R.id.lastUsageDateTv);
-        ratingStatusTv = (TextView) findViewById(R.id.ratingStatusTv);
+        appInstallationTimeTv = (TextView) findViewById(R.id.appInstallationTimeTv);
         askMeLaterDateTv = (TextView) findViewById(R.id.askMeLaterDateTv);
-        activationTimeTv = (TextView) findViewById(R.id.activationTimeTv);
+        askMeLaterTimeTv = (TextView) findViewById(R.id.askMeLaterTimeTv);
+        nextActivationDateTv = (TextView) findViewById(R.id.activationDateTv);
+        nextActivationTimeTv = (TextView) findViewById(R.id.activationTimeTv);
+        lastUsageDateTv = (TextView) findViewById(R.id.lastUsageDateTv);
+        lastUsageTimeTv = (TextView) findViewById(R.id.lastUsageTimeTv);
+        usageCountTv = (TextView) findViewById(R.id.usageCountTv);
+
+        ratingStatusTv = (TextView) findViewById(R.id.ratingStatusTv);
         activationUsageTv = (TextView) findViewById(R.id.activationUsageTv);
         usageCountPeriodSeparationTv = (TextView) findViewById(R.id.usageCountPeriodSeparationTv);
 
         try
         {
-            currentTimeTv.setText(util.getFormatedCurrentDateString());
+            String currentDateTimeArr[] = util.getFormatedCurrentDateString().trim().split(" ");
+            currentDateTv.setText(currentDateTimeArr[0]);
+            currentTimeTv.setText(currentDateTimeArr[1]);
 
-            appInstallationDateTv.setText(util.getAppInstallationDateString(getApplicationContext()));
+            String appInstallationtDateTimeArr[] = util.getAppInstallationDateString(getApplicationContext()).trim().split(" ");
+            appInstallationDateTv.setText(appInstallationtDateTimeArr[0]);
+            appInstallationTimeTv.setText(appInstallationtDateTimeArr[1]);
+
+            String lastusageDateTimeArr[] = util.getFormatedLastUsageDateString(getApplicationContext()).trim().split(" ");
+            lastUsageDateTv.setText(lastusageDateTimeArr[0]);
+            lastUsageTimeTv.setText(lastusageDateTimeArr[1]);
 
             String usageCount = String.valueOf(util.getUsageCount(getApplicationContext()));
             usageCountTv.setText(usageCount);
 
-            String lastusageDate = util.getFormatedLastUsageDateString(getApplicationContext());
-            lastUsageDateTv.setText(lastusageDate);
+            String askMeLaterDateTimeArr[] = util.getAskMeLaterDateString(getApplicationContext()).trim().split(" ");
+            askMeLaterDateTv.setText(askMeLaterDateTimeArr[0]);
+            askMeLaterTimeTv.setText(askMeLaterDateTimeArr[1]);
+
+            String activationDateTimeArr[] = util.claculateNextActivationDate(getApplicationContext()).trim().split(" ");
+            nextActivationDateTv.setText(activationDateTimeArr[0]);
+            nextActivationTimeTv.setText(activationDateTimeArr[1]);
 
             RatingStatusEnum ratingStatus = util.getRatingStatus(getApplicationContext());
             ratingStatusTv.setText(ratingStatus.toString());
 
-            String askMeLaterDate = util.getAskMeLaterDateString(getApplicationContext());
-            askMeLaterDateTv.setText(askMeLaterDate);
 
-            String activationTime = util.claculateNextActivationDate(getApplicationContext());
-            activationTimeTv.setText(activationTime);
         }
         catch (Exception e)
         {

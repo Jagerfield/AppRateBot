@@ -15,5 +15,8 @@
     <color name="green_dark">#ff7ac29e</color>
     <color name="grey_greenish_background">#FF7F7F7F</color>
     <color name="greytext">#FF666666</color>
+    <color name="greytextII">#FF8c8c8c</color>
+    <color name="purple">#FFAF7AC5</color>
+    <color name="red">#FFCB4335</color>
 
 </resources>

@@ -71,16 +71,17 @@
         android:id="@+id/dialog_rating_buttons"
         android:layout_width="match_parent"
         android:layout_height="@dimen/rate_button_height"
-        android:background="?attr/selectableItemBackground"
         android:orientation="horizontal"
         android:layout_below="@id/descriptionRatingDlg"
         android:weightSum="3">
 
+        <!--https://stackoverflow.com/questions/33808180/adding-selectableitembackground-and-also-coloring-background-->
+        <!--android:background="?attr/selectableItemBackground"-->
+
         <TextView
             android:id="@+id/noRatingBt"
             android:text="Nope"
-            style="@style/TextViewClickableButton"/>
-
+            style="@style/ClickableTextViewButton"/>
         <LinearLayout
             android:layout_height="match_parent"
             android:layout_width="1dp"
@@ -90,7 +91,7 @@
 
         <TextView
             android:id="@+id/laterRatingBt"
-            style="@style/TextViewClickableButton"
+            style="@style/ClickableTextViewButton"
             android:text="Later" />
 
         <LinearLayout
@@ -103,7 +104,7 @@
         <TextView
             android:id="@+id/okRatingBt"
             android:text="Sure"
-            style="@style/TextViewClickableButton"/>
+            style="@style/ClickableTextViewButton"/>
 
     </LinearLayout>
 

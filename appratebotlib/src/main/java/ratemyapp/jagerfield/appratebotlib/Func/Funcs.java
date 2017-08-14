@@ -79,7 +79,7 @@ public class Funcs
     {
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getDefault());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  //"yyyy-MM-dd HH:mm:ss.SSS"
         return format.format(cal.getTime());
     }
 
@@ -90,7 +90,7 @@ public class Funcs
         lastCal.setTimeInMillis(lastSavedDate);
 
         lastCal.setTimeZone(TimeZone.getDefault());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         return format.format(lastCal.getTime());
     }
@@ -106,7 +106,7 @@ public class Funcs
         cal.setTimeInMillis(installTimeInMilliseconds);
         cal.setTimeZone(TimeZone.getDefault());
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = format.format(cal.getTime());
 
         return date;
@@ -119,7 +119,7 @@ public class Funcs
         cal.setTimeInMillis(askMeLaterDate);
 
         cal.setTimeZone(TimeZone.getDefault());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         String date = format.format(cal.getTime());
         return date;
@@ -167,7 +167,7 @@ public class Funcs
     {
         long result = 0;
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         try
         {

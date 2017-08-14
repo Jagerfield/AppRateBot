@@ -9,15 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp"
+        >
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:text="App data"
-            android:textSize="16dp"
-            android:textStyle="bold" />
+            style="@style/MainTitlesTextView"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -25,18 +24,28 @@
             android:layout_marginTop="8dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:text="Current Time : "
-                android:textStyle="bold" />
+                style="@style/TitlesTextView" />
 
-            <TextView
-                android:id="@+id/currentTimeTv"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="00:00" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/currentDateTv"
+                    style="@style/DatesTextView"
+                    />
+
+                <TextView
+                    android:id="@+id/currentTimeTv"
+                    style="@style/TimesTextView"
+                    />
+
+            </LinearLayout>
+
+
 
         </RelativeLayout>
 
@@ -46,19 +55,26 @@
             android:layout_marginTop="16dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="App Installation Time : "
-                android:textStyle="bold"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true" />
+                style="@style/TitlesTextView" />
 
-            <TextView
-                android:id="@+id/appInstallationDateTv"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="00:00" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/appInstallationDateTv"
+                    style="@style/DatesTextView"
+                    />
+
+                <TextView
+                    android:id="@+id/appInstallationTimeTv"
+                    style="@style/TimesTextView"
+                    />
+
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -68,18 +84,12 @@
             android:layout_marginTop="16dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:text="Usage count : "
-                android:textStyle="bold" />
+                style="@style/TitlesTextView" />
 
             <TextView
                 android:id="@+id/usageCountTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="0" />
+                style="@style/CountersTextView"/>
 
         </RelativeLayout>
 
@@ -89,18 +99,26 @@
             android:layout_marginTop="16dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="Last usage date : "
-                android:textStyle="bold"
-                android:layout_alignParentStart="true" />
+                style="@style/TitlesTextView" />
 
-            <TextView
-                android:id="@+id/lastUsageDateTv"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="00:00" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/lastUsageDateTv"
+                    style="@style/DatesTextView"
+                    />
+
+                <TextView
+                    android:id="@+id/lastUsageTimeTv"
+                    style="@style/TimesTextView"
+                    />
+
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -110,18 +128,16 @@
             android:layout_marginTop="16dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="Rating status : "
-                android:textStyle="bold"
-                android:layout_alignParentStart="true" />
+                style="@style/TitlesTextView" />
 
             <TextView
                 android:id="@+id/ratingStatusTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="Not Asked" />
+                android:text="Not Asked"
+                android:textColor="@color/red"/>
 
         </RelativeLayout>
 
@@ -131,18 +147,26 @@
             android:layout_marginTop="16dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="Ask me later date : "
-                android:textStyle="bold"
-                 android:layout_alignParentStart="true" />
+                style="@style/TitlesTextView" />
 
-            <TextView
-                android:id="@+id/askMeLaterDateTv"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="00:00" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/askMeLaterDateTv"
+                    style="@style/DatesTextView"
+                    />
+
+                <TextView
+                    android:id="@+id/askMeLaterTimeTv"
+                    style="@style/TimesTextView"
+                    />
+
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -154,13 +178,8 @@
             android:orientation="vertical" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="16dp"
             android:text="User activation settings"
-            android:textSize="16dp"
-            android:textStyle="bold" />
+            style="@style/MainTitlesTextView"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -168,18 +187,26 @@
             android:layout_marginTop="8dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:text="Activation time : "
-                android:textStyle="bold" />
+                style="@style/TitlesTextView" />
 
-            <TextView
-                android:id="@+id/activationTimeTv"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="00:00" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/activationDateTv"
+                    style="@style/DatesTextView"
+                    />
+
+                <TextView
+                    android:id="@+id/activationTimeTv"
+                    style="@style/TimesTextView"
+                    />
+
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -189,18 +216,12 @@
             android:layout_marginTop="16dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:text="Activation usage count : "
-                android:textStyle="bold" />
+                style="@style/TitlesTextView" />
 
             <TextView
                 android:id="@+id/activationUsageTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="0" />
+                style="@style/CountersTextView"/>
 
         </RelativeLayout>
 
@@ -210,18 +231,12 @@
             android:layout_marginTop="16dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:text="Usage Count Period Separation : "
-                android:textStyle="bold" />
+                style="@style/TitlesTextView" />
 
             <TextView
                 android:id="@+id/usageCountPeriodSeparationTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="0" />
+                style="@style/CountersTextView"/>
 
         </RelativeLayout>
 
@@ -233,13 +248,8 @@
             android:orientation="vertical" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="16dp"
             android:text="Current time and usage status"
-            android:textSize="16dp"
-            android:textStyle="bold" />
+            style="@style/MainTitlesTextView"/>
 
 <!---->
     </LinearLayout>

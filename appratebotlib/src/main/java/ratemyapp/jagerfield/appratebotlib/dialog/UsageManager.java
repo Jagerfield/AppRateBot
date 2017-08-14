@@ -217,7 +217,7 @@ public class UsageManager
 //    private String getDate(long time)
 //    {
 //        Date date = new Date(time);
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        sdf.setTimeZone(TimeZone.getDefault());
 ////        sdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
 //
