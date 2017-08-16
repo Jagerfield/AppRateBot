@@ -29,7 +29,7 @@ public class Funcs
     private Funcs() {
     }
 
-        public long getAppInstallationDate(Context context) throws Exception
+    public long getAppInstallationDate(Context context) throws Exception
     {
         PackageManager packageManager =  context.getPackageManager();
         long installTimeInMilliseconds;
@@ -73,6 +73,32 @@ public class Funcs
         if (C.sysIsBroken(context)) { throw new IllegalArgumentException("Context is null"); }
         int count = PreferenceUtil.getInt(context, C.IKEYS.KEY_USAGE_COUNT, 0);
         return count;
+    }
+
+    //Uesd in the App Ui for test
+    public String getFormatedUiTestCurrentDateString(Context context)  throws Exception
+    {
+        Calendar cal = Calendar.getInstance();
+        long uiTestDate = PreferenceUtil.getLong(context, C.IKEYS.KEY_UI_TEST_CURRENT_DATE, 0l);
+        cal.setTimeInMillis(uiTestDate);
+
+        cal.setTimeZone(TimeZone.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        return format.format(cal.getTime());
+    }
+
+    //Uesd in the App Ui for test
+    public String getFormatedUiTestCurrentTimeString(Context context)  throws Exception
+    {
+        Calendar cal = Calendar.getInstance();
+        long uiTestDate = PreferenceUtil.getLong(context, C.IKEYS.KEY_UI_TEST_CURRENT_TIME, 0l);
+        cal.setTimeInMillis(uiTestDate);
+
+        cal.setTimeZone(TimeZone.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+
+        return format.format(cal.getTime());
     }
 
     public String getFormatedCurrentDateString()  throws Exception

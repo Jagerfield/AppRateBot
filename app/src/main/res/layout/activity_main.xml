@@ -12,7 +12,8 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingBottom="16dp"
-        >
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <TextView
             android:text="App data"
@@ -24,8 +25,11 @@
             android:layout_marginTop="8dp">
 
             <TextView
-                android:text="Current Time : "
-                style="@style/TitlesTextView" />
+                android:text="Edit Current Time : "
+                style="@style/TitlesTextView"
+                 android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -55,7 +59,7 @@
             android:layout_marginTop="16dp">
 
             <TextView
-                android:text="App Installation Time : "
+                android:text="Edit App Installation Time : "
                 style="@style/TitlesTextView" />
 
             <LinearLayout
@@ -84,7 +88,7 @@
             android:layout_marginTop="16dp">
 
             <TextView
-                android:text="Usage count : "
+                android:text="Edit Usage count : "
                 style="@style/TitlesTextView" />
 
             <TextView
@@ -99,7 +103,7 @@
             android:layout_marginTop="16dp">
 
             <TextView
-                android:text="Last usage date : "
+                android:text="Edit Last usage date : "
                 style="@style/TitlesTextView" />
 
             <LinearLayout
@@ -128,7 +132,7 @@
             android:layout_marginTop="16dp">
 
             <TextView
-                android:text="Rating status : "
+                android:text="Edit Rating status : "
                 style="@style/TitlesTextView" />
 
             <TextView
@@ -147,7 +151,7 @@
             android:layout_marginTop="16dp">
 
             <TextView
-                android:text="Ask me later date : "
+                android:text="Edit Ask me later date : "
                 style="@style/TitlesTextView" />
 
             <LinearLayout
@@ -187,7 +191,7 @@
             android:layout_marginTop="8dp">
 
             <TextView
-                android:text="Activation time : "
+                android:text="Edit Activation time : "
                 style="@style/TitlesTextView" />
 
             <LinearLayout
@@ -216,7 +220,7 @@
             android:layout_marginTop="16dp">
 
             <TextView
-                android:text="Activation usage count : "
+                android:text="Edit Activation usage count : "
                 style="@style/TitlesTextView" />
 
             <TextView

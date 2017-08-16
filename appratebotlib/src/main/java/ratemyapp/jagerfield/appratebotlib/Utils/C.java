@@ -25,6 +25,8 @@ public class C
 
     public interface IKEYS
     {
+        String KEY_UI_TEST_CURRENT_DATE = "KEY_UI_TEST_CURRENT_DATE";
+        String KEY_UI_TEST_CURRENT_TIME = "KEY_UI_TEST_CURRENT_TIME";
         String KEY_RATINGS_STATE = "KEY_RATINGS_STATE";
         String KEY_ASK_AGAIN_DATE = "KEY_ASK_AGAIN_DATE";
         String KEY_USAGE_COUNT = "KEY_USAGE_COUNT";
