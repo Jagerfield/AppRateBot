@@ -76,30 +76,33 @@ public class Funcs
     }
 
     //Uesd in the App Ui for test
-    public String getFormatedUiTestCurrentDateString(Context context)  throws Exception
+    public String getFormatedUiTestCurrentDateTimeString(Context context)  throws Exception
     {
         Calendar cal = Calendar.getInstance();
-        long uiTestDate = PreferenceUtil.getLong(context, C.IKEYS.KEY_UI_TEST_CURRENT_DATE, 0l);
+        long uiTestDate = PreferenceUtil.getLong(context, C.IKEYS.KEY_UI_TEST_CURRENT_DATE_TIME, 0l);
+        if (uiTestDate == 0l){return "";}
+
         cal.setTimeInMillis(uiTestDate);
 
         cal.setTimeZone(TimeZone.getDefault());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        return format.format(cal.getTime());
+        return simpleDateFormat.format(cal.getTime());
     }
 
     //Uesd in the App Ui for test
-    public String getFormatedUiTestCurrentTimeString(Context context)  throws Exception
-    {
-        Calendar cal = Calendar.getInstance();
-        long uiTestDate = PreferenceUtil.getLong(context, C.IKEYS.KEY_UI_TEST_CURRENT_TIME, 0l);
-        cal.setTimeInMillis(uiTestDate);
-
-        cal.setTimeZone(TimeZone.getDefault());
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-
-        return format.format(cal.getTime());
-    }
+//    public String getFormatedUiTestCurrentTimeString(Context context)  throws Exception
+//    {
+//        Calendar cal = Calendar.getInstance();
+//        long uiTestTime = PreferenceUtil.getLong(context, C.IKEYS.KEY_UI_TEST_CURRENT_TIME, 0l);
+//        cal.setTimeInMillis(uiTestTime);
+//        if (uiTestTime == 0l){return "";}
+//
+//        cal.setTimeZone(TimeZone.getDefault());
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+//
+//        return simpleDateFormat.format(cal.getTime());
+//    }
 
     public String getFormatedCurrentDateString()  throws Exception
     {
@@ -116,9 +119,9 @@ public class Funcs
         lastCal.setTimeInMillis(lastSavedDate);
 
         lastCal.setTimeZone(TimeZone.getDefault());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        return format.format(lastCal.getTime());
+        return simpleDateFormat.format(lastCal.getTime());
     }
 
     public String getAppInstallationDateString(Context context)  throws Exception
