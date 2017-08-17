@@ -175,12 +175,14 @@ public class UiRatingTestManager
                     currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.menublue));
                     currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.green_dark));
                     PreferenceUtil.setBoolean(context, C.IKEYS.KEY_ALLOW_EDITING_CURRENT_DATE_TIME, true);
+                    PreferenceUtil.setString(context, C.IKEYS.KEY_EDITED_CURRENT_DATE_TIME, Funcs.getInstance().getSysDateTimeString());
+                    PreferenceUtil.setLong(context, C.IKEYS.KEY_LAST_USAGE_DATE, Calendar.getInstance().getTimeInMillis());
                 }
                 else
                 {
                     currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.greytext));
                     currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.greytext));
-                    PreferenceUtil.setBoolean(context, C.IKEYS.KEY_ALLOW_EDITING_CURRENT_DATE_TIME, false);
+                    resetKeys();
                 }
             }
         });
@@ -267,6 +269,16 @@ public class UiRatingTestManager
         });
     }
 
+    private void resetKeys()
+    {
+        PreferenceUtil.setBoolean(context, C.IKEYS.KEY_ALLOW_EDITING_CURRENT_DATE_TIME, false);
+        PreferenceUtil.setString(context, C.IKEYS.KEY_EDITED_CURRENT_DATE_TIME, "");
+        PreferenceUtil.setLong(context, C.IKEYS.KEY_LAST_USAGE_DATE, getCurrentCal().getTimeInMillis());
+        PreferenceUtil.setInt(context, C.IKEYS.KEY_USAGE_COUNT, 1);
+        PreferenceUtil.setLong(context, C.IKEYS.KEY_ASK_AGAIN_DATE, 0l);
+        PreferenceUtil.setInt(context, C.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NOT_ASKED));
+    }
+
     private void updateTextViewDateValue(Calendar cal)
     {
         try
@@ -303,6 +315,13 @@ public class UiRatingTestManager
         }
     }
 
+    public static Calendar getCurrentCal()
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getDefault());
+        return cal;
+    }
+
     /***
      *
      *
@@ -318,6 +337,7 @@ public class UiRatingTestManager
      *
      */
 
+    Update the value of last usage as you get the current time
 //    Add a check button to enable editing the current time. Adjust the getCurrentTime to work accordingly. So the getUiTestTime should be built into the
 //        getCurrentTime.
 

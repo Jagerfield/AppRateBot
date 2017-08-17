@@ -130,7 +130,7 @@ public class Funcs
 //    }
 
 
-    public String getSysDateTimeString()  throws Exception
+    public String getSysDateTimeString()
     {
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getDefault());
