@@ -75,20 +75,45 @@ public class Funcs
         return count;
     }
 
-    //Uesd in the App Ui for test
-    public String getFormatedUiTestCurrentDateTimeString(Context context)  throws Exception
+    public String getCurrentDateTime(Context context)
     {
-        Calendar cal = Calendar.getInstance();
-        long uiTestDate = PreferenceUtil.getLong(context, C.IKEYS.KEY_UI_TEST_CURRENT_DATE_TIME, 0l);
-        if (uiTestDate == 0l){return "";}
+        String dateTime = "";
 
-        cal.setTimeInMillis(uiTestDate);
+        try
+        {
+            if (context==null){throw new IllegalArgumentException("Context is null");}
 
-        cal.setTimeZone(TimeZone.getDefault());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            boolean b = PreferenceUtil.getBoolean(context, C.IKEYS.KEY_ALLOW_EDITING_CURRENT_DATE_TIME, false);
 
-        return simpleDateFormat.format(cal.getTime());
+            if (b)
+            {
+                String editedValue = PreferenceUtil.getString(context, C.IKEYS.KEY_EDITED_CURRENT_DATE_TIME, "");
+
+                if(editedValue==null || editedValue.isEmpty())//Get actuall system time
+                {
+                    dateTime = getSysDateTimeString();
+                    PreferenceUtil.setString(context, C.IKEYS.KEY_EDITED_CURRENT_DATE_TIME, dateTime);
+                }
+                else
+                {
+                    dateTime = editedValue;
+                }
+            }
+            else
+            {
+                dateTime = getSysDateTimeString();
+                PreferenceUtil.setString(context, C.IKEYS.KEY_EDITED_CURRENT_DATE_TIME, "");
+            }
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return dateTime;
     }
+
 
     //Uesd in the App Ui for test
 //    public String getFormatedUiTestCurrentTimeString(Context context)  throws Exception
@@ -104,7 +129,8 @@ public class Funcs
 //        return simpleDateFormat.format(cal.getTime());
 //    }
 
-    public String getFormatedCurrentDateString()  throws Exception
+
+    public String getSysDateTimeString()  throws Exception
     {
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getDefault());

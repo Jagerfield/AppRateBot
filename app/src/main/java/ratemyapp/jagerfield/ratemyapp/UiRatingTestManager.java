@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
@@ -29,20 +32,17 @@ public class UiRatingTestManager
     private TextView nextActivationTimeTv;
     private TextView lastUsageDateTv;
     private TextView lastUsageTimeTv;
-
     private TextView usageCountTv;
     private TextView ratingStatusTv;
     private TextView activationUsageTv;
     private TextView usageCountPeriodSeparationTv;
+
+    private CheckBox editCurrentTimeTitleCb;
     private Funcs util;
     private Activity activity;
-
     private TextView clickedTextView;
-    private String clickedKeyType;
-
     private DatePickerDialog.OnDateSetListener dateListener;
     private TimePickerDialog.OnTimeSetListener timeListener;
-
     private Context context;
 
     public UiRatingTestManager(Activity activity)
@@ -60,8 +60,6 @@ public class UiRatingTestManager
             return;
         }
 
-        onCalendarChanged();
-
         currentDateTv = (TextView) activity.findViewById(R.id.currentDateTv);
         currentTimeTv = (TextView) activity.findViewById(R.id.currentTimeTv);
         appInstallationDateTv = (TextView) activity.findViewById(R.id.appInstallationDateTv);
@@ -73,16 +71,16 @@ public class UiRatingTestManager
         lastUsageDateTv = (TextView) activity.findViewById(R.id.lastUsageDateTv);
         lastUsageTimeTv = (TextView) activity.findViewById(R.id.lastUsageTimeTv);
         usageCountTv = (TextView) activity.findViewById(R.id.usageCountTv);
-
         ratingStatusTv = (TextView) activity.findViewById(R.id.ratingStatusTv);
         activationUsageTv = (TextView) activity.findViewById(R.id.activationUsageTv);
         usageCountPeriodSeparationTv = (TextView) activity.findViewById(R.id.usageCountPeriodSeparationTv);
+        editCurrentTimeTitleCb = (CheckBox) activity.findViewById(R.id.editCurrentTimeTitleCb);
 
         try
         {
             setListeners();
 
-            getCurrentDateTime();
+            initialCurrentTDateCheckbox();
 
             String appInstallationtDateTimeArr[] = util.getAppInstallationDateString(activity.getApplicationContext()).trim().split(" ");
             appInstallationDateTv.setText(appInstallationtDateTimeArr[0]);
@@ -111,11 +109,82 @@ public class UiRatingTestManager
         {
             e.printStackTrace();
         }
-
     }
 
-    private void onCalendarChanged()
+    private void initialCurrentTDateCheckbox()
     {
+        settingCurrentTimeAndDateViews();
+    }
+
+    private void settingCurrentTimeAndDateViews() {
+        /**
+         * Set checkbox state and current time date colors
+         */
+        boolean b = PreferenceUtil.getBoolean(context, C.IKEYS.KEY_ALLOW_EDITING_CURRENT_DATE_TIME, false);
+
+        if (b)
+        {
+            currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.menublue));
+            currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.green_dark));
+            editCurrentTimeTitleCb.setChecked(true);
+        }
+        else
+        {
+            currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.greytext));
+            currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.greytext));
+            editCurrentTimeTitleCb.setChecked(false);
+        }
+
+        /**
+         * Fill in the values of current time date. They can be either the sys date and time or the saved value in the preferences
+         * depending on the edit mode
+         */
+
+        String currentDateTime[];
+
+        try
+        {
+            String value = Funcs.getInstance().getCurrentDateTime(context);
+            if (value != null && !value.isEmpty())
+            {
+                currentDateTime = value.trim().split(" ");
+
+                if (currentDateTime[0]!=null && !currentDateTime[0].isEmpty() && currentDateTime[1]!=null && !currentDateTime[1].isEmpty())
+                {
+                    //Use current time and dateListener
+                    currentDateTv.setText(currentDateTime[0]);
+                    currentTimeTv.setText(currentDateTime[1]);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void setListeners()
+    {
+        editCurrentTimeTitleCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b)
+            {
+                if (b)
+                {
+                    currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.menublue));
+                    currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.green_dark));
+                    PreferenceUtil.setBoolean(context, C.IKEYS.KEY_ALLOW_EDITING_CURRENT_DATE_TIME, true);
+                }
+                else
+                {
+                    currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.greytext));
+                    currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.greytext));
+                    PreferenceUtil.setBoolean(context, C.IKEYS.KEY_ALLOW_EDITING_CURRENT_DATE_TIME, false);
+                }
+            }
+        });
+
         dateListener = new DatePickerDialog.OnDateSetListener()
         {
             @Override
@@ -129,7 +198,24 @@ public class UiRatingTestManager
 
                 try
                 {
-                    updateClickedTextViewValue(cal);
+                    String time = currentTimeTv.getText().toString();
+                    String timeArr[] = time.trim().split(":");
+
+                    if (timeArr[0]!=null && timeArr[1]!=null && timeArr[2]!=null &&
+                            !timeArr[0].isEmpty() && !timeArr[1].isEmpty() && !timeArr[2].isEmpty())
+                    {
+                        cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeArr[0]));
+                        cal.set(Calendar.MINUTE, Integer.parseInt(timeArr[1]));
+                        cal.set(Calendar.SECOND, Integer.parseInt(timeArr[2]));
+                    }
+                    else
+                    {
+                        cal.set(Calendar.HOUR_OF_DAY, 1);
+                        cal.set(Calendar.MINUTE, 1);
+                        cal.set(Calendar.SECOND, 1);
+                    }
+
+                    updateTextViewDateValue(cal);
                 }
                 catch (Exception e)
                 {
@@ -138,58 +224,7 @@ public class UiRatingTestManager
             }
 
         };
-    }
 
-    private void getCurrentDateTime() throws Exception
-    {
-        if (context==null){return;}
-
-        try
-        {
-
-            String uiTestDateTime = util.getFormatedUiTestCurrentDateTimeString(context).trim();
-
-            String currentDateTime = util.getFormatedCurrentDateString().trim();
-            String currentDateTimeArr[] = currentDateTime.split(" ");
-
-
-            if (uiTestDateTime==null || uiTestDateTime.isEmpty())
-            {
-                //Use current time and dateListener
-                currentDateTv.setText(currentDateTimeArr[0]);
-                currentTimeTv.setText(currentDateTimeArr[1]);
-                PreferenceUtil.setLong(activity.getApplicationContext(), C.IKEYS.KEY_UI_TEST_CURRENT_DATE_TIME, Long.parseLong(currentDateTime));
-            }
-            else
-            {
-                String uiTestDateTimeArr[] = uiTestDateTime.split(" ");
-
-                boolean a = Long.parseLong(currentDateTimeArr[0])> Long.parseLong(uiTestDateTimeArr[0]);//Compare dates
-                boolean b = Long.parseLong(currentDateTimeArr[0]) == Long.parseLong(uiTestDateTimeArr[0]);//Compare dates
-                boolean c = Long.parseLong(currentDateTimeArr[1])> Long.parseLong(uiTestDateTimeArr[1]);//Compare times
-
-                if (a || (b && c))
-                {
-                    currentDateTv.setText(currentDateTimeArr[0]);
-                    currentTimeTv.setText(currentDateTimeArr[1]);
-                    PreferenceUtil.setLong(activity.getApplicationContext(), C.IKEYS.KEY_UI_TEST_CURRENT_DATE_TIME, Long.parseLong(currentDateTime));
-                }
-                else
-                {
-                    currentDateTv.setText(uiTestDateTimeArr[0]);
-                    currentTimeTv.setText(uiTestDateTimeArr[1]);
-                }
-            }
-
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private void setListeners()
-    {
         currentDateTv.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -233,35 +268,148 @@ public class UiRatingTestManager
         });
     }
 
-    private void updateClickedTextViewValue(Calendar cal) throws Exception
+    private void updateTextViewDateValue(Calendar cal)
     {
-        if (clickedTextView== null || clickedKeyType == null || clickedKeyType.isEmpty())
+        try
         {
-            throw new IllegalArgumentException("clickedTextView or clickedKeyType has a wrong value");
+            if (clickedTextView== null)
+            {
+                throw new IllegalArgumentException("clickedTextView or clickedKeyType has a wrong value");
+            }
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateValue = dateFormat.format(cal.getTime());
+
+            if (dateValue != null && !dateValue.isEmpty())
+            {
+                String dateTime[]= dateValue.trim().split(" ");
+
+                if (dateTime[0]!=null && !dateTime[0].isEmpty())
+                {
+                    clickedTextView.setText(dateTime[0]);
+
+                    if (editCurrentTimeTitleCb.isChecked())
+                    {
+                        PreferenceUtil.setLong(activity.getApplicationContext(), C.IKEYS.KEY_EDITED_CURRENT_DATE_TIME, cal.getTimeInMillis());
+                    }
+                }
+            }
+
+            //Save value
+            clickedTextView = null;
         }
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("");
-
-        if (clickedKeyType.contains("_DATE"))
+        catch (Exception e)
         {
-            simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            e.printStackTrace();
         }
-        else if (clickedKeyType.contains("_TIME"))
-        {
-            simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
-        }
-
-        clickedTextView.setText(simpleDateFormat.format(cal.getTime()));
-
-        //Save value
-        PreferenceUtil.setLong(activity.getApplicationContext(), clickedKeyType, cal.getTimeInMillis());
-        clickedTextView = null;
-        clickedKeyType = null;
     }
 
+    /***
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
 
-    Add a check button to enable editing the current time. Adjust the getCurrentTime to work accordingly. So the getUiTestTime should be built into the
-        getCurrentTime.
+//    Add a check button to enable editing the current time. Adjust the getCurrentTime to work accordingly. So the getUiTestTime should be built into the
+//        getCurrentTime.
 
 }
+
+
+
+//    private void updateTextViewDateValue(Calendar cal)
+//    {
+//        try
+//        {
+//            if (clickedTextView== null || clickedKeyType == null || clickedKeyType.isEmpty())
+//            {
+//                throw new IllegalArgumentException("clickedTextView or clickedKeyType has a wrong value");
+//            }
+//
+//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("");
+//
+//            if (clickedKeyType.contains("_DATE"))
+//            {
+//                simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//            }
+//            else if (clickedKeyType.contains("_TIME"))
+//            {
+//                simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+//            }
+//
+//            clickedTextView.setText(simpleDateFormat.format(cal.getTime()));
+//
+//            //Save value
+//            PreferenceUtil.setLong(activity.getApplicationContext(), clickedKeyType, cal.getTimeInMillis());
+//            clickedTextView = null;
+//            clickedKeyType = null;
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+//    }
+
+
+
+
+
+
+
+//    private void getCurrentDateTime() throws Exception
+//    {
+//        if (context==null){return;}
+//
+//        try
+//        {
+//
+//            String uiTestDateTime = util.getFormatedUserEditedCurrentDateTimeString(context).trim();
+//
+//            String currentDateTime = util.getSysDateTimeString().trim();
+//            String currentDateTimeArr[] = currentDateTime.split(" ");
+//
+//
+//            if (uiTestDateTime==null || uiTestDateTime.isEmpty())
+//            {
+//                //Use current time and dateListener
+//                currentDateTv.setText(currentDateTimeArr[0]);
+//                currentTimeTv.setText(currentDateTimeArr[1]);
+//                PreferenceUtil.setLong(activity.getApplicationContext(), C.IKEYS.KEY_EDITED_CURRENT_DATE_TIME, Long.parseLong(currentDateTime));
+//            }
+//            else
+//            {
+//                String uiTestDateTimeArr[] = uiTestDateTime.split(" ");
+//
+//                boolean a = Long.parseLong(currentDateTimeArr[0])> Long.parseLong(uiTestDateTimeArr[0]);//Compare dates
+//                boolean b = Long.parseLong(currentDateTimeArr[0]) == Long.parseLong(uiTestDateTimeArr[0]);//Compare dates
+//                boolean c = Long.parseLong(currentDateTimeArr[1])> Long.parseLong(uiTestDateTimeArr[1]);//Compare times
+//
+//                if (a || (b && c))
+//                {
+//                    currentDateTv.setText(currentDateTimeArr[0]);
+//                    currentTimeTv.setText(currentDateTimeArr[1]);
+//                    PreferenceUtil.setLong(activity.getApplicationContext(), C.IKEYS.KEY_EDITED_CURRENT_DATE_TIME, Long.parseLong(currentDateTime));
+//                }
+//                else
+//                {
+//                    currentDateTv.setText(uiTestDateTimeArr[0]);
+//                    currentTimeTv.setText(uiTestDateTimeArr[1]);
+//                }
+//            }
+//
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+//    }
 

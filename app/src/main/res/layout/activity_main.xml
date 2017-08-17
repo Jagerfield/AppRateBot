@@ -1,261 +1,247 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     tools:context="ratemyapp.jagerfield.ratemyapp.MainActivity">
+
+    <TextView
+        style="@style/MainTitlesTextView"
+        android:text="App data" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <CheckBox
+            android:id="@+id/editCurrentTimeTitleCb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit current time"
+            style="@style/TitlesTextView"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/currentDateTv"
+                style="@style/DatesTextView"
+                android:textColor="@color/greytext"/>
+
+            <TextView
+                android:id="@+id/currentTimeTv"
+                style="@style/TimesTextView"
+                android:textColor="@color/greytext"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            style="@style/TitlesTextView"
+            android:text="Edit App Installation Time : " />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/appInstallationDateTv"
+                style="@style/DatesTextView" />
+
+            <TextView
+                android:id="@+id/appInstallationTimeTv"
+                style="@style/TimesTextView" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            style="@style/TitlesTextView"
+            android:text="Edit Usage count : " />
+
+        <TextView
+            android:id="@+id/usageCountTv"
+            style="@style/CountersTextView" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            style="@style/TitlesTextView"
+            android:text="Edit Last usage date : " />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/lastUsageDateTv"
+                style="@style/DatesTextView" />
+
+            <TextView
+                android:id="@+id/lastUsageTimeTv"
+                style="@style/TimesTextView" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            style="@style/TitlesTextView"
+            android:text="Edit Rating status : " />
+
+        <TextView
+            android:id="@+id/ratingStatusTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Not Asked"
+            android:textColor="@color/red" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            style="@style/TitlesTextView"
+            android:text="Edit Ask me later date : " />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/askMeLaterDateTv"
+                style="@style/DatesTextView" />
+
+            <TextView
+                android:id="@+id/askMeLaterTimeTv"
+                style="@style/TimesTextView" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="16dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_height="2dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/greymedium"
+        android:orientation="vertical" />
+
+    <TextView
+        style="@style/MainTitlesTextView"
+        android:text="User activation settings" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
 
         <TextView
-            android:text="App data"
-            style="@style/MainTitlesTextView"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-
-            <TextView
-                android:text="Edit Current Time : "
-                style="@style/TitlesTextView"
-                 android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/currentDateTv"
-                    style="@style/DatesTextView"
-                    />
-
-                <TextView
-                    android:id="@+id/currentTimeTv"
-                    style="@style/TimesTextView"
-                    />
-
-            </LinearLayout>
-
-
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
-
-            <TextView
-                android:text="Edit App Installation Time : "
-                style="@style/TitlesTextView" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/appInstallationDateTv"
-                    style="@style/DatesTextView"
-                    />
-
-                <TextView
-                    android:id="@+id/appInstallationTimeTv"
-                    style="@style/TimesTextView"
-                    />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
-
-            <TextView
-                android:text="Edit Usage count : "
-                style="@style/TitlesTextView" />
-
-            <TextView
-                android:id="@+id/usageCountTv"
-                style="@style/CountersTextView"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
-
-            <TextView
-                android:text="Edit Last usage date : "
-                style="@style/TitlesTextView" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/lastUsageDateTv"
-                    style="@style/DatesTextView"
-                    />
-
-                <TextView
-                    android:id="@+id/lastUsageTimeTv"
-                    style="@style/TimesTextView"
-                    />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
-
-            <TextView
-                android:text="Edit Rating status : "
-                style="@style/TitlesTextView" />
-
-            <TextView
-                android:id="@+id/ratingStatusTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="Not Asked"
-                android:textColor="@color/red"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
-
-            <TextView
-                android:text="Edit Ask me later date : "
-                style="@style/TitlesTextView" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/askMeLaterDateTv"
-                    style="@style/DatesTextView"
-                    />
-
-                <TextView
-                    android:id="@+id/askMeLaterTimeTv"
-                    style="@style/TimesTextView"
-                    />
-
-            </LinearLayout>
-
-        </RelativeLayout>
+            style="@style/TitlesTextView"
+            android:text="Edit Activation time : " />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/greymedium"
-            android:orientation="vertical" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/activationDateTv"
+                style="@style/DatesTextView" />
+
+            <TextView
+                android:id="@+id/activationTimeTv"
+                style="@style/TimesTextView" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
 
         <TextView
-            android:text="User activation settings"
-            style="@style/MainTitlesTextView"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-
-            <TextView
-                android:text="Edit Activation time : "
-                style="@style/TitlesTextView" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/activationDateTv"
-                    style="@style/DatesTextView"
-                    />
-
-                <TextView
-                    android:id="@+id/activationTimeTv"
-                    style="@style/TimesTextView"
-                    />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
-
-            <TextView
-                android:text="Edit Activation usage count : "
-                style="@style/TitlesTextView" />
-
-            <TextView
-                android:id="@+id/activationUsageTv"
-                style="@style/CountersTextView"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
-
-            <TextView
-                android:text="Usage Count Period Separation : "
-                style="@style/TitlesTextView" />
-
-            <TextView
-                android:id="@+id/usageCountPeriodSeparationTv"
-                style="@style/CountersTextView"/>
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/greymedium"
-            android:orientation="vertical" />
+            style="@style/TitlesTextView"
+            android:text="Edit Activation usage count : " />
 
         <TextView
-            android:text="Current time and usage status"
-            style="@style/MainTitlesTextView"/>
+            android:id="@+id/activationUsageTv"
+            style="@style/CountersTextView" />
 
-<!---->
-    </LinearLayout>
+    </RelativeLayout>
 
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            style="@style/TitlesTextView"
+            android:text="Usage Count Period Separation : " />
+
+        <TextView
+            android:id="@+id/usageCountPeriodSeparationTv"
+            style="@style/CountersTextView" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/greymedium"
+        android:orientation="vertical" />
+
+    <TextView
+        style="@style/MainTitlesTextView"
+        android:text="Current time and usage status" />
+
+
+
+</LinearLayout>
