@@ -222,7 +222,6 @@ public class UiRatingTestManager
                     e.printStackTrace();
                 }
             }
-
         };
 
         currentDateTv.setOnClickListener(new View.OnClickListener()
@@ -277,12 +276,12 @@ public class UiRatingTestManager
                 throw new IllegalArgumentException("clickedTextView or clickedKeyType has a wrong value");
             }
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String dateValue = dateFormat.format(cal.getTime());
+            SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateTimeValue = dateTimeFormat.format(cal.getTime());
 
-            if (dateValue != null && !dateValue.isEmpty())
+            if (dateTimeValue != null && !dateTimeValue.isEmpty())
             {
-                String dateTime[]= dateValue.trim().split(" ");
+                String dateTime[]= dateTimeValue.trim().split(" ");
 
                 if (dateTime[0]!=null && !dateTime[0].isEmpty())
                 {
@@ -290,7 +289,7 @@ public class UiRatingTestManager
 
                     if (editCurrentTimeTitleCb.isChecked())
                     {
-                        PreferenceUtil.setLong(activity.getApplicationContext(), C.IKEYS.KEY_EDITED_CURRENT_DATE_TIME, cal.getTimeInMillis());
+                        PreferenceUtil.setString(activity.getApplicationContext(), C.IKEYS.KEY_EDITED_CURRENT_DATE_TIME, dateTimeValue);
                     }
                 }
             }
