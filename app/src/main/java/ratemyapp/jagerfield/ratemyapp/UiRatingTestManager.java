@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -18,7 +19,7 @@ import java.util.TimeZone;
 import ratemyapp.jagerfield.appratebotlib.Func.Funcs;
 import ratemyapp.jagerfield.appratebotlib.Utils.C;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
-import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingStatusEnum;
+import ratemyapp.jagerfield.appratebotlib.builders.builder.EnumRatingStatus;
 
 public class UiRatingTestManager
 {
@@ -41,9 +42,10 @@ public class UiRatingTestManager
     private Funcs util;
     private Activity activity;
     private TextView clickedTextView;
-    private DatePickerDialog.OnDateSetListener dateListener;
-    private TimePickerDialog.OnTimeSetListener timeListener;
+    private DatePickerDialog.OnDateSetListener datePicker;
+    private TimePickerDialog.OnTimeSetListener timePicker;
     private Context context;
+    private EnumCALValueType clickedTextViewType;
 
     public UiRatingTestManager(Activity activity)
     {
@@ -101,7 +103,7 @@ public class UiRatingTestManager
             nextActivationDateTv.setText(activationDateTimeArr[0]);
             nextActivationTimeTv.setText(activationDateTimeArr[1]);
 
-            RatingStatusEnum ratingStatus = util.getRatingStatus(activity.getApplicationContext());
+            EnumRatingStatus ratingStatus = util.getRatingStatus(activity.getApplicationContext());
             ratingStatusTv.setText(ratingStatus.toString());
 
         }
@@ -144,14 +146,14 @@ public class UiRatingTestManager
 
         try
         {
-            String value = Funcs.getInstance().getCurrentDateTime(context);
+            String value = Funcs.getInstance().getAppCurrentDateTimeString(context);
             if (value != null && !value.isEmpty())
             {
                 currentDateTime = value.trim().split(" ");
 
                 if (currentDateTime[0]!=null && !currentDateTime[0].isEmpty() && currentDateTime[1]!=null && !currentDateTime[1].isEmpty())
                 {
-                    //Use current time and dateListener
+                    //Use current time and datePicker
                     currentDateTv.setText(currentDateTime[0]);
                     currentTimeTv.setText(currentDateTime[1]);
                 }
@@ -187,19 +189,26 @@ public class UiRatingTestManager
             }
         });
 
-        dateListener = new DatePickerDialog.OnDateSetListener()
+        /**
+         * Date and Time Picker listeners
+         */
+
+        datePicker = new DatePickerDialog.OnDateSetListener()
         {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
             {
-                Calendar cal = Calendar.getInstance();
-                cal.setTimeZone(TimeZone.getDefault());
-                cal.set(Calendar.YEAR, year);
-                cal.set(Calendar.MONTH, monthOfYear);
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
                 try
                 {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeZone(TimeZone.getDefault());
+
+                    //Set date from the Cal
+                    cal.set(Calendar.YEAR, year);
+                    cal.set(Calendar.MONTH, monthOfYear);
+                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                    //set time from the currentTimeTv
                     String time = currentTimeTv.getText().toString();
                     String timeArr[] = time.trim().split(":");
 
@@ -209,12 +218,6 @@ public class UiRatingTestManager
                         cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeArr[0]));
                         cal.set(Calendar.MINUTE, Integer.parseInt(timeArr[1]));
                         cal.set(Calendar.SECOND, Integer.parseInt(timeArr[2]));
-                    }
-                    else
-                    {
-                        cal.set(Calendar.HOUR_OF_DAY, 1);
-                        cal.set(Calendar.MINUTE, 1);
-                        cal.set(Calendar.SECOND, 1);
                     }
 
                     updateTextViewDateValue(cal);
@@ -226,6 +229,46 @@ public class UiRatingTestManager
             }
         };
 
+
+        timePicker = new TimePickerDialog.OnTimeSetListener()
+        {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute)
+            {
+                try
+                {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeZone(TimeZone.getDefault());
+
+                    //set date from the currentDateTv
+                    String date = currentDateTv.getText().toString();
+                    String dateArr[] = date.trim().split(":");
+
+                    if (dateArr[0]!=null && dateArr[1]!=null && dateArr[2]!=null &&
+                            !dateArr[0].isEmpty() && !dateArr[1].isEmpty() && !dateArr[2].isEmpty())
+                    {
+                        cal.set(Calendar.YEAR, Integer.parseInt(dateArr[0]));
+                        cal.set(Calendar.MONTH, Integer.parseInt(dateArr[1]));
+                        cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dateArr[2]));
+                    }
+
+                    //set time from the Cal
+                    cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    cal.set(Calendar.MINUTE, 1);
+                    cal.set(Calendar.SECOND, 0);
+
+                    updateTextViewDateValue(cal);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+
+        /******************************************************************************************/
+
         currentDateTv.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -234,11 +277,12 @@ public class UiRatingTestManager
                 try
                 {
                     clickedTextView = currentDateTv;
+                    clickedTextViewType = EnumCALValueType.DATE;
                     String sections[] = currentDateTv.getText().toString().trim().split("-");
                     int year = Integer.parseInt(sections[0]);
                     int month = Integer.parseInt(sections[1]);
                     int day = Integer.parseInt(sections[2]);
-                    new DatePickerDialog(activity, dateListener, year, month, day).show();
+                    new DatePickerDialog(activity, datePicker, year, month, day).show();
                 }
                 catch (Exception e)
                 {
@@ -255,11 +299,12 @@ public class UiRatingTestManager
                 try
                 {
                     clickedTextView = currentTimeTv;
+                    clickedTextViewType = EnumCALValueType.TIME;
                     String sections[] = currentTimeTv.getText().toString().trim().split("-");
                     int hour = Integer.parseInt(sections[0]);
                     int min = Integer.parseInt(sections[1]);
                     int sec = Integer.parseInt(sections[2]);
-                    new TimePickerDialog(activity, timeListener, hour, min, true).show();
+                    new TimePickerDialog(activity, timePicker, hour, min, true).show();
                 }
                 catch (Exception e)
                 {
@@ -276,14 +321,14 @@ public class UiRatingTestManager
         PreferenceUtil.setLong(context, C.IKEYS.KEY_LAST_USAGE_DATE, getCurrentCal().getTimeInMillis());
         PreferenceUtil.setInt(context, C.IKEYS.KEY_USAGE_COUNT, 1);
         PreferenceUtil.setLong(context, C.IKEYS.KEY_ASK_AGAIN_DATE, 0l);
-        PreferenceUtil.setInt(context, C.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NOT_ASKED));
+        PreferenceUtil.setInt(context, C.IKEYS.KEY_RATINGS_STATE, EnumRatingStatus.fromEnumToInt(EnumRatingStatus.NOT_ASKED));
     }
 
     private void updateTextViewDateValue(Calendar cal)
     {
         try
         {
-            if (clickedTextView== null)
+            if (clickedTextView== null || clickedTextViewType== null)
             {
                 throw new IllegalArgumentException("clickedTextView or clickedKeyType has a wrong value");
             }
@@ -295,19 +340,40 @@ public class UiRatingTestManager
             {
                 String dateTime[]= dateTimeValue.trim().split(" ");
 
-                if (dateTime[0]!=null && !dateTime[0].isEmpty())
+                switch (clickedTextViewType)
                 {
-                    clickedTextView.setText(dateTime[0]);
+                    case DATE:
+                        if (dateTime[0]!=null && !dateTime[0].isEmpty())
+                        {
+                            clickedTextView.setText(dateTime[0]);
 
-                    if (editCurrentTimeTitleCb.isChecked())
-                    {
-                        PreferenceUtil.setString(activity.getApplicationContext(), C.IKEYS.KEY_EDITED_CURRENT_DATE_TIME, dateTimeValue);
-                    }
+                            if (editCurrentTimeTitleCb.isChecked())
+                            {
+                                PreferenceUtil.setString(activity.getApplicationContext(), C.IKEYS.KEY_EDITED_CURRENT_DATE_TIME, dateTimeValue);
+                            }
+                        }
+
+                        break;
+
+                    case TIME:
+
+                        if (dateTime[1]!=null && !dateTime[1].isEmpty())
+                        {
+                            clickedTextView.setText(dateTime[1]);
+
+                            if (editCurrentTimeTitleCb.isChecked())
+                            {
+                                PreferenceUtil.setString(activity.getApplicationContext(), C.IKEYS.KEY_EDITED_CURRENT_DATE_TIME, dateTimeValue);
+                            }
+                        }
+
+                        break;
                 }
             }
 
             //Save value
             clickedTextView = null;
+            clickedTextViewType = null;
         }
         catch (Exception e)
         {
@@ -320,6 +386,11 @@ public class UiRatingTestManager
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getDefault());
         return cal;
+    }
+
+    private enum EnumCALValueType
+    {
+        DATE, TIME
     }
 
     /***
@@ -337,7 +408,7 @@ public class UiRatingTestManager
      *
      */
 
-    Update the value of last usage as you get the current time
+//    Update the value of last usage as you get the current time
 //    Add a check button to enable editing the current time. Adjust the getCurrentTime to work accordingly. So the getUiTestTime should be built into the
 //        getCurrentTime.
 
@@ -384,7 +455,7 @@ public class UiRatingTestManager
 
 
 
-//    private void getCurrentDateTime() throws Exception
+//    private void getAppCurrentDateTimeString() throws Exception
 //    {
 //        if (context==null){return;}
 //
@@ -399,7 +470,7 @@ public class UiRatingTestManager
 //
 //            if (uiTestDateTime==null || uiTestDateTime.isEmpty())
 //            {
-//                //Use current time and dateListener
+//                //Use current time and datePicker
 //                currentDateTv.setText(currentDateTimeArr[0]);
 //                currentTimeTv.setText(currentDateTimeArr[1]);
 //                PreferenceUtil.setLong(activity.getApplicationContext(), C.IKEYS.KEY_EDITED_CURRENT_DATE_TIME, Long.parseLong(currentDateTime));

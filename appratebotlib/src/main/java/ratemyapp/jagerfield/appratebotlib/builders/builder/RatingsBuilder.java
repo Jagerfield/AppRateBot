@@ -92,7 +92,7 @@ public class RatingsBuilder implements IBuilder
         try
         {
             checkParamerters();
-            RatingStatusEnum ratingStatus = Funcs.getInstance().getRatingStatus(context);
+            EnumRatingStatus ratingStatus = Funcs.getInstance().getRatingStatus(context);
 
             if (builderType == BuilderTypeEnum.TIME_AND_USAGE_COUNT)
             {

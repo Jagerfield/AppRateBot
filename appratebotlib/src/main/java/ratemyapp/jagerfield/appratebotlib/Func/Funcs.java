@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import ratemyapp.jagerfield.appratebotlib.Utils.C;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
-import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingStatusEnum;
+import ratemyapp.jagerfield.appratebotlib.builders.builder.EnumRatingStatus;
 import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingsBuilder;
 
 public class Funcs
@@ -46,14 +46,14 @@ public class Funcs
 
 //        if (askMeLaterDate == 0)
 //        {
-//            PreferenceUtil.setInt(context, C.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
+//            PreferenceUtil.setInt(context, C.IKEYS.KEY_RATINGS_STATE, EnumRatingStatus.fromEnumToInt(EnumRatingStatus.NEVER));
 //            throw new IllegalStateException("Can't get askMeLaterDate");
 //        }
 
         return askMeLaterDate;
     }
 
-    public RatingStatusEnum getRatingStatus(Context context)
+    public EnumRatingStatus getRatingStatus(Context context)
     {
         int result;
 
@@ -61,11 +61,11 @@ public class Funcs
 
         if (result == -9 )
         {
-            result = RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NOT_ASKED);
+            result = EnumRatingStatus.fromEnumToInt(EnumRatingStatus.NOT_ASKED);
             PreferenceUtil.setInt(context, C.IKEYS.KEY_RATINGS_STATE, result);
         }
 
-        return RatingStatusEnum.fromIntToEnum(result);
+        return EnumRatingStatus.fromIntToEnum(result);
     }
 
     public int getUsageCount(Context context) throws Exception
@@ -75,7 +75,7 @@ public class Funcs
         return count;
     }
 
-    public String getCurrentDateTime(Context context)
+    public String getAppCurrentDateTimeString(Context context)
     {
         String dateTime = "";
 
@@ -230,7 +230,7 @@ public class Funcs
             long activationTime = RatingsBuilder.getActivationTime();
             long waitingPeriod = getTimeActivationPeriod(timeUnit, activationTime);
 
-            RatingStatusEnum ratingStatus = getRatingStatus(context);
+            EnumRatingStatus ratingStatus = getRatingStatus(context);
 
             switch (ratingStatus)
             {

@@ -1,10 +1,10 @@
 package ratemyapp.jagerfield.appratebotlib.builders.builder;
 
-public enum RatingStatusEnum
+public enum EnumRatingStatus
 {
     NEVER, LATER, NOT_ASKED;
 
-    public static RatingStatusEnum fromIntToEnum(int value)
+    public static EnumRatingStatus fromIntToEnum(int value)
     {
         switch (value)
         {
@@ -19,7 +19,7 @@ public enum RatingStatusEnum
         }
     }
 
-    public static int fromEnumToInt(RatingStatusEnum value)
+    public static int fromEnumToInt(EnumRatingStatus value)
     {
         switch (value)
         {

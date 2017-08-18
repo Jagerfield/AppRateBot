@@ -14,7 +14,7 @@ import android.widget.Toast;
 import ratemyapp.jagerfield.appratebotlib.R;
 import ratemyapp.jagerfield.appratebotlib.Utils.C;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
-import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingStatusEnum;
+import ratemyapp.jagerfield.appratebotlib.builders.builder.EnumRatingStatus;
 
 
 public class RatingDialogPresenter
@@ -62,7 +62,7 @@ public class RatingDialogPresenter
             public void onClick(View view) {
 
                 launchMarket();
-                PreferenceUtil.setInt(appCompatDialog.getContext(), C.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
+                PreferenceUtil.setInt(appCompatDialog.getContext(), C.IKEYS.KEY_RATINGS_STATE, EnumRatingStatus.fromEnumToInt(EnumRatingStatus.NEVER));
                 appCompatDialog.dismiss();
             }
         });
@@ -72,7 +72,7 @@ public class RatingDialogPresenter
             @Override
             public void onClick(View view) {
 
-                PreferenceUtil.setInt(appCompatDialog.getContext(), C.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NEVER));
+                PreferenceUtil.setInt(appCompatDialog.getContext(), C.IKEYS.KEY_RATINGS_STATE, EnumRatingStatus.fromEnumToInt(EnumRatingStatus.NEVER));
                 appCompatDialog.dismiss();
             }
         });
@@ -83,7 +83,7 @@ public class RatingDialogPresenter
             @Override
             public void onClick(View view) {
 
-                PreferenceUtil.setInt(appCompatDialog.getContext(), C.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.LATER));
+                PreferenceUtil.setInt(appCompatDialog.getContext(), C.IKEYS.KEY_RATINGS_STATE, EnumRatingStatus.fromEnumToInt(EnumRatingStatus.LATER));
                 PreferenceUtil.setInt(appCompatDialog.getContext(), C.IKEYS.KEY_USAGE_COUNT, 0);
                 PreferenceUtil.setLong(appCompatDialog.getContext(), C.IKEYS.KEY_ASK_AGAIN_DATE, UsageManager.getCurrentCal().getTimeInMillis());
                 appCompatDialog.dismiss();

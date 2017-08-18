@@ -1,17 +1,7 @@
 package ratemyapp.jagerfield.appratebotlib.Utils;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.util.Log;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
-
-import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingStatusEnum;
-import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingsBuilder;
 
 public class C
 {

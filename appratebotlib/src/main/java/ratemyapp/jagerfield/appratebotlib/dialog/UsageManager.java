@@ -7,7 +7,7 @@ import java.util.TimeZone;
 
 import ratemyapp.jagerfield.appratebotlib.Utils.C;
 import ratemyapp.jagerfield.appratebotlib.Utils.PreferenceUtil;
-import ratemyapp.jagerfield.appratebotlib.builders.builder.RatingStatusEnum;
+import ratemyapp.jagerfield.appratebotlib.builders.builder.EnumRatingStatus;
 
 /**
  * Two main functions
@@ -92,7 +92,7 @@ public class UsageManager
 
         PreferenceUtil.setLong(context, C.IKEYS.KEY_LAST_USAGE_DATE, lastUsageDate);
         PreferenceUtil.setInt(context, C.IKEYS.KEY_USAGE_COUNT, 0);
-        PreferenceUtil.setInt(context, C.IKEYS.KEY_RATINGS_STATE, RatingStatusEnum.fromEnumToInt(RatingStatusEnum.NOT_ASKED));
+        PreferenceUtil.setInt(context, C.IKEYS.KEY_RATINGS_STATE, EnumRatingStatus.fromEnumToInt(EnumRatingStatus.NOT_ASKED));
     }
 
     public void getSavedLastUsageDate()
