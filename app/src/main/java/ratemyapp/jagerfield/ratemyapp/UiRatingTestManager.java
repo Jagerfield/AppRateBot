@@ -127,13 +127,13 @@ public class UiRatingTestManager
         if (b)
         {
             currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.menublue));
-            currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.green_dark));
+            currentTimeTv.setTextColor(ContextCompat.getColor(context, R.color.green_dark));
             editCurrentTimeTitleCb.setChecked(true);
         }
         else
         {
             currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.greytext));
-            currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.greytext));
+            currentTimeTv.setTextColor(ContextCompat.getColor(context, R.color.greytext));
             editCurrentTimeTitleCb.setChecked(false);
         }
 
@@ -165,6 +165,14 @@ public class UiRatingTestManager
         }
     }
 
+
+
+    /**
+     * Listeners   *********************************************************************************
+     *
+     *
+     */
+
     private void setListeners()
     {
         editCurrentTimeTitleCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
@@ -175,17 +183,20 @@ public class UiRatingTestManager
                 if (b)
                 {
                     currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.menublue));
-                    currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.green_dark));
+                    currentTimeTv.setTextColor(ContextCompat.getColor(context, R.color.green_dark));
                     PreferenceUtil.setBoolean(context, C.IKEYS.KEY_ALLOW_EDITING_CURRENT_DATE_TIME, true);
                     PreferenceUtil.setString(context, C.IKEYS.KEY_EDITED_CURRENT_DATE_TIME, Funcs.getInstance().getSysDateTimeString());
-                    PreferenceUtil.setLong(context, C.IKEYS.KEY_LAST_USAGE_DATE, Calendar.getInstance().getTimeInMillis());
+                    PreferenceUtil.setLong(context, C.IKEYS.KEY_LAST_USAGE_DATE, getCurrentCal().getTimeInMillis());
                 }
+
                 else
                 {
                     currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.greytext));
-                    currentDateTv.setTextColor(ContextCompat.getColor(context, R.color.greytext));
+                    currentTimeTv.setTextColor(ContextCompat.getColor(context, R.color.greytext));
                     resetKeys();
                 }
+
+                settingCurrentTimeAndDateViews();
             }
         });
 
@@ -242,7 +253,7 @@ public class UiRatingTestManager
 
                     //set date from the currentDateTv
                     String date = currentDateTv.getText().toString();
-                    String dateArr[] = date.trim().split(":");
+                    String dateArr[] = date.trim().split("-");
 
                     if (dateArr[0]!=null && dateArr[1]!=null && dateArr[2]!=null &&
                             !dateArr[0].isEmpty() && !dateArr[1].isEmpty() && !dateArr[2].isEmpty())
@@ -254,7 +265,7 @@ public class UiRatingTestManager
 
                     //set time from the Cal
                     cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                    cal.set(Calendar.MINUTE, 1);
+                    cal.set(Calendar.MINUTE, minute);
                     cal.set(Calendar.SECOND, 0);
 
                     updateTextViewDateValue(cal);
@@ -300,7 +311,7 @@ public class UiRatingTestManager
                 {
                     clickedTextView = currentTimeTv;
                     clickedTextViewType = EnumCALValueType.TIME;
-                    String sections[] = currentTimeTv.getText().toString().trim().split("-");
+                    String sections[] = currentTimeTv.getText().toString().trim().split(":");
                     int hour = Integer.parseInt(sections[0]);
                     int min = Integer.parseInt(sections[1]);
                     int sec = Integer.parseInt(sections[2]);
@@ -381,7 +392,7 @@ public class UiRatingTestManager
         }
     }
 
-    public static Calendar getCurrentCal()
+    public Calendar getCurrentCal()
     {
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getDefault());
